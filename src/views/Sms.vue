@@ -89,7 +89,6 @@ export default {
           this.client = response.data;
           this.controller = 1;
           this.msg = "";
-          console.log(response.data);
         })
         .catch((err) => {
           this.msg = err.response.data.message;
