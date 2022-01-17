@@ -55,7 +55,6 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("accessToken");
-      console.log("yap");
     },
     toggleSidebar() {
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);

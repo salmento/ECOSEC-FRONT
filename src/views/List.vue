@@ -51,7 +51,6 @@ export default {
   },
   methods: {
     notifications(firstname, lastname, phoneNumber) {
-      console.log(firstname, lastname, phoneNumber);
       this.$router.push({
         name: "SMS",
         params: { firstname, lastname, phoneNumber },

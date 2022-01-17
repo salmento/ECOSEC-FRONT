@@ -50,6 +50,7 @@ export default {
   },
   methods: {
     login() {
+      console.log("Login");
       Api.post("/auth/login", {
         username: this.username,
         password: this.password,

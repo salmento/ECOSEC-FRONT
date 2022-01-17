@@ -108,7 +108,6 @@ export default {
         }
       )
         .then((response) => {
-          console.log(response.data);
           this.success = response.data.message;
         })
         .catch((err) => {
