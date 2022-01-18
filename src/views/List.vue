@@ -64,7 +64,12 @@ export default {
       },
     })
       .then((response) => {
-        this.clients = response.data;
+        this.clients = response.data
+          .reduce(
+            (map, client) => map.set(client.phoneNumber, client),
+            new Map()
+          )
+          .values();
       })
       .catch((err) => {
         this.msg = err.response.data.message;
