@@ -24,4 +24,14 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped>
+footer {
+  background-color: #e8e9ee;
+  position: fixed;
+  left: 20%;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+</style>

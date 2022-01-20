@@ -23,7 +23,8 @@
               </div>
             </template>
             <div class="dropdown-divider"></div>
-            <a href="/login" class="dropdown-item">
+            <span class="ml-5 text-sm text-primary">{{ user }}</span>
+            <a href="/login" class="dropdown-item" @click="logout()">
               <i class="ni ni-user-run"></i>
               <span>Logout</span>
             </a>
@@ -64,6 +65,21 @@
 import NavbarToggleButton from "@/components/NavbarToggleButton";
 
 export default {
+  data() {
+    return {
+      activeNotifications: false,
+      showMenu: false,
+      searchQuery: "",
+      user: "",
+    };
+  },
+  mounted() {
+    if (localStorage.accessToken) {
+      this.user = localStorage.firstname + " " + localStorage.lastname;
+    } else {
+      this.$router.push("login");
+    }
+  },
   name: "sidebar",
   components: {
     NavbarToggleButton,
@@ -87,6 +103,9 @@ export default {
     };
   },
   methods: {
+    logout() {
+      localStorage.removeItem("accessToken");
+    },
     closeSidebar() {
       this.$sidebar.displaySidebar(false);
     },
@@ -101,3 +120,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (max-width: 767px) {
+  .navbar-collapse {
+    background-color: #627d99;
+  }
+}
+</style>

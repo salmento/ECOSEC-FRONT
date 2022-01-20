@@ -1,7 +1,7 @@
 <template>
-  <div class="row justify-content-center">
-    <div class="col-lg-5 col-md-7">
-      <div class="card bg-secondary shadow border-0">
+  <div class="row justify-content-center w-100">
+    <div class="col-lg-6 col-md-7">
+      <div class="card bg-default px-auto shadow border-0">
         <div class="card-body px-lg-5 py-lg-5">
           <div class="text-center text-muted mb-4">
             <small>ECOSEC</small>
@@ -68,4 +68,4 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped></style>

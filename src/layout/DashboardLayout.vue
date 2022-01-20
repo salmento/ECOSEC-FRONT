@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
-    <side-bar short-title="Ecosec" title="Ecosec" class="bg-default">
+    <side-bar short-title="Ecosec" title="Ecosec" class="bg-default sidebar">
       <template v-slot:links>
         <sidebar-item
           :link="{
@@ -60,4 +60,5 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

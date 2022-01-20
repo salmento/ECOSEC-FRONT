@@ -1,11 +1,14 @@
 <template>
-  <div class="main-content bg-default h-100">
-    <div class="header bg-gradient-success py-7 py-lg-8"></div>
+  <div class="main-content">
+    <!-- Header -->
+    <div class="header py-7 py-lg-8">
+      <div class="separator separator-bottom separator-skew zindex-100"></div>
+    </div>
     <!-- Page content -->
     <div class="container mt--8 pb-5">
       <router-view></router-view>
     </div>
-    <footer class="py-5">
+    <footer class="py-5 footer">
       <div class="container">
         <div class="row align-items-center justify-content-xl-between">
           <div class="col-xl-6">
@@ -35,4 +38,14 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.footer {
+  background-color: #e8e9ee;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+</style>
