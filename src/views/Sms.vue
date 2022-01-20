@@ -34,7 +34,7 @@
             }}
           </span>
         </p>
-        <p class="" v-if="client">
+        <p class="" v-if="client" >
           Mandar notificação para o número
           <span>{{ client.phoneNumber }} </span>
           do
@@ -70,7 +70,6 @@ export default {
   data() {
     return {
       client: "",
-      phoneNumber: "",
       text: "",
       search: "",
       msg: "",
@@ -97,8 +96,8 @@ export default {
     send() {
       Api.post(
         `/client/sms`,
-        {
-          phoneNumber: this.phoneNumber,
+        { 
+          phoneNumber: this.client.phoneNumber,
           text: this.text,
         },
         {
