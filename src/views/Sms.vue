@@ -84,7 +84,10 @@ export default {
     };
   },
   methods: {
+    
     searchFunc() {
+      this.success = "";
+      this.msg = ""
       Api.get(`/client/findone/${this.search}`, {
         headers: {
           "x-access-token": localStorage.getItem("accessToken"),
@@ -100,10 +103,13 @@ export default {
         });
     },
     send() {
+      this.success = "";
+      this.msg = ""
       Api.post(
         `/client/sms`,
         {
-          phoneNumber: this.client.phoneNumber,
+          
+          phoneNumber: this.client.phoneNumber | this.$route.params.phoneNumber,
           text: this.text,
         },
         {
@@ -114,6 +120,8 @@ export default {
       )
         .then((response) => {
           this.success = response.data.message;
+          this.client = "";
+          this.$route.params.phoneNumber = "";
         })
         .catch((err) => {
           this.msg = err.response.data.message;

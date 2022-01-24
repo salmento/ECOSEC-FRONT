@@ -22,7 +22,7 @@
                 <td>{{ client.phoneNumber }}</td>
                 <td>{{ client.clientType }}</td>
                 <td>
-                  <base-button
+                  <base-button class="bg-default"
                     icon="ni ni-send"
                     @click="
                       notifications(
