@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-content-center">
     <div class="col-lg-11 col-md-10 mt-8">
-      <div class="card bg-secondary shadow border-0">
+      <div class="card bg-default shadow border-0">
         <div class="card-body px-lg-5 py-lg-5">
           <form role="form" class="text-primary">
             <div class="row">
@@ -98,6 +98,8 @@ export default {
   },
   methods: {
     register() {
+      this.success = "";
+      this.msg = "";
       Api.post(
         "/client/create",
         {
@@ -113,6 +115,9 @@ export default {
         }
       )
         .then((response) => {
+          this.firstname = "";
+          this.lastname = "";
+          this.phoneNumber = "";
           this.success = response.data.message;
         })
         .catch((err) => {
