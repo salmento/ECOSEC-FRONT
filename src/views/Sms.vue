@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     
-    searchFunc() {
+    searchFunc() {  
       this.success = "";
       this.msg = ""
       Api.get(`/client/findone/${this.search}`, {

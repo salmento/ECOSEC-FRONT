@@ -7,16 +7,18 @@
             <thead>
               <tr>
                 <th scope="col">#</th>
+                <th scope="col">Referençia</th>
                 <th scope="col">Nome</th>
                 <th scope="col">Apelido</th>
                 <th scope="col">Número do telefone</th>
                 <th scope="col">Tipo de Cliente</th>
-                <th scope="col">Notifcar</th>
+                <th scope="col">Notificar</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(client, index) in clients" :key="index">
                 <th>{{ index + 1 }}</th>
+                <th>{{ clinet.reference}}</th>
                 <td>{{ client.firstname }}</td>
                 <td>{{ client.lastname }}</td>
                 <td>{{ client.phoneNumber }}</td>

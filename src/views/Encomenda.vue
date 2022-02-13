@@ -52,14 +52,15 @@
               </div>
             </div>
 
-            <hr >
-            <div class="row" v-for='(order,index) in orders ' :key="index" >
+            <hr />
+            <div class="row" v-for="(order, index) in orders" :key="index">
               <div class="col-md-3">
-                 <div ><label for="clothe"> Peça de roupa</label>  
-                 </div>
-                <select v-model="selected"  class = "form-control">
-                  <option disabled selected  value="">Selecione uma opção</option>
-                  <option >Gravata</option>
+                <div><label for="clothe"> Peça de roupa</label></div>
+                <select v-model="selected" class="form-control">
+                  <option disabled selected value="">
+                    Selecione uma opção
+                  </option>
+                  <option>Gravata</option>
                   <option>Boxers</option>
                   <option>Camisa</option>
                   <option>Calças</option>
@@ -72,13 +73,13 @@
                   placeholder="Quantidade"
                   type="number"
                   id="quantity"
-                  min = 1
+                  min="1"
                   formClasses="input-group-alternative"
                   v-model="quantity"
                   required
                 ></base-input>
               </div>
-                <div class="col-md-6">
+              <div class="col-md-6">
                 <label for="observation"> Observação</label>
                 <base-input
                   placeholder="Observação"
@@ -90,20 +91,20 @@
               </div>
             </div>
 
-           <div>
+            <div>
               <base-button
                 type="primary"
                 icon="ni ni-fat-add"
                 class="my-4"
                 @click="orderAdd()"
-                >
+              >
               </base-button>
               <base-button
                 type="primary"
                 icon="ni ni-fat-delete"
                 class="my-4"
                 @click="orderMinus()"
-                >
+              >
               </base-button>
             </div>
 
@@ -147,13 +148,13 @@ export default {
       msg: "",
       controller: 0,
       success: "",
-      selected : "",
-      quantity : "",
+      selected: "",
+      quantity: "",
       lastname: "",
       firstname: "",
       observation: "",
       reference: "",
-      invoice : "",
+      invoice: "",
     };
   },
   methods: {
@@ -183,7 +184,10 @@ export default {
       this.orders.pop();
     },
     send() {
-      this.success = "";
+      this.$router.push({
+        name: "SMS",
+      });
+      /*this.success = "";
       this.msg = "";
       Api.post(
         `/client/sms`,
@@ -204,7 +208,27 @@ export default {
         })
         .catch((err) => {
           this.msg = err.response.data.message;
-        });
+        });*/
+    },
+    cancel() {
+      (this.order = [
+        {
+          name: "",
+        },
+      ]),
+        (this.client = "");
+      this.text = "";
+      this.search = "";
+      this.msg = "";
+      this.controller = 0;
+      this.success = "";
+      this.selected = "";
+      this.quantity = "";
+      this.lastname = "";
+      this.firstname = "";
+      this.observation = "";
+      this.reference = "";
+      this.invoice = "";
     },
   },
 };
