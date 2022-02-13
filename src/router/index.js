@@ -7,17 +7,18 @@ import Sms from "../views/Sms.vue";
 import List from "../views/List.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+import Encomenda from "../views/Encomenda.vue";
 
-const routes = [
+const routes = [ 
   {
     path: "/",
     redirect: "/register",
     component: DashboardLayout,
     children: [
       {
-        path: "/notificar",
-        name: "Sms",
-        components: { default: Sms },
+        path: "/encomenda",
+        name: "Encomenda",
+        components: { default: Encomenda },
       },
       {
         path: "/notificar/:firstname/:lastname/:phoneNumber",
@@ -33,6 +34,11 @@ const routes = [
       {
         path: "/register",
         name: "register",
+        components: { default: Register },
+      },
+      {
+        path: "/entrega",
+        name: "entrega",
         components: { default: Register },
       },
     ],

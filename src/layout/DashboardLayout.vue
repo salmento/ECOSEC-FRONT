@@ -12,15 +12,22 @@
 
         <sidebar-item
           :link="{
-            name: 'Notificar Cliente',
-            icon: 'ni ni-time-alarm text-blue',
-            path: '/notificar',
+            name: 'Registar encomenda',
+            icon: 'ni ni-books text-blue',
+            path: '/encomenda',
           }"
         />
         <sidebar-item
           :link="{
             name: 'Consultar Cliente',
-            icon: 'ni ni-bullet-list-67 text-red',
+            icon: 'ni ni-bullet-list-67 text-yellow',
+            path: '/list',
+          }"
+        />
+        <sidebar-item
+          :link="{
+            name: 'Entrega',
+            icon: 'fas fa-shipping-fast text-success',
             path: '/list',
           }"
         />
