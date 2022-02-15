@@ -27,8 +27,8 @@
             <p v-if="success" class="text-success text-center">{{ success }}</p>
             <hr v-if="success" />
             <p class="" v-if="this.$route.params.phoneNumber">
-              Mandar notificação para o número
-              <span>{{ (phoneNumber = this.$route.params.phoneNumber) }} </span>
+              Mandar notificação para o número 849229754
+               <span>{{ (phoneNumber = this.$route.params.phoneNumber) }} </span> 
               do
               <span
                 >{{

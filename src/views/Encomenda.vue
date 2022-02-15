@@ -185,7 +185,7 @@ export default {
     },
     send() {
       this.$router.push({
-        name: "SMS",
+        name: "register",
       });
       /*this.success = "";
       this.msg = "";

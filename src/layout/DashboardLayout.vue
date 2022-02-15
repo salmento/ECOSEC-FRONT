@@ -19,9 +19,9 @@
         />
         <sidebar-item
           :link="{
-            name: 'Consultar Cliente',
+            name: 'Consultar encomenda',
             icon: 'ni ni-bullet-list-67 text-yellow',
-            path: '/list',
+            path: '/listorder',
           }"
         />
         <sidebar-item

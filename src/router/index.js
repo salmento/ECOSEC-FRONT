@@ -8,6 +8,7 @@ import List from "../views/List.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Encomenda from "../views/Encomenda.vue";
+import Listorder from "../views/Listorder.vue";
 
 const routes = [ 
   {
@@ -35,6 +36,11 @@ const routes = [
         path: "/register",
         name: "register",
         components: { default: Register },
+      },
+      {
+        path: "/listorder",
+        name: "listorder",
+        components: { default: Listorder },
       },
       {
         path: "/entrega",
