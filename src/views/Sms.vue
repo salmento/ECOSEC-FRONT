@@ -4,38 +4,31 @@
       <div class="card bg-default shadow border-0">
         <div class="card-body px-lg-5 py-lg-5">
           <form>
-            <div class="row mb-4 ml-1">
-              <input
-                class="form-control mr-sm-2 col-10 col-sm-8"
-                type="search"
-                placeholder="Search"
-                v-model="search"
-                aria-label="Search"
-                required
-              />
-              <base-button
-                class="btn btn-outline-primary"
-                type="submit"
-                @click="searchFunc()"
-                >Search
-              </base-button>
-            </div>
-            <hr v-if="msg" />
+                        <hr v-if="msg" />
             <p v-if="msg" class="text-danger text-center">{{ msg }}</p>
             <hr v-if="msg" />
             <hr v-if="success" />
             <p v-if="success" class="text-success text-center">{{ success }}</p>
             <hr v-if="success" />
+            <p class="" >
+              Notificar  ao <span class ="text-success"
+                >
+                 Salmento Chitlango 
+              </span> para levantar roupas da factura <span class ="text-success"
+                >84/100 </span>
+                
+            </p>
             <p class="" v-if="this.$route.params.phoneNumber">
               Mandar notificação para o número 849229754
-               <span>{{ (phoneNumber = this.$route.params.phoneNumber) }} </span> 
+               /* <span>{{ (phoneNumber = this.$route.params.phoneNumber) }} </span> */ 
               do
               <span
-                >{{
+              Salmento Chitlango
+                > /* {{
                   this.$route.params.firstname +
                   " " +
                   this.$route.params.lastname
-                }}
+                }}  */
               </span>
             </p>
             <p class="" v-if="client">
@@ -69,7 +62,7 @@
   </div>
 </template>
 <script>
-import Api from "../service/api";
+//import Api from "../service/api";
 
 export default {
   name: "sms",
@@ -85,25 +78,12 @@ export default {
   },
   methods: {
     
-    searchFunc() {  
-      this.success = "";
-      this.msg = ""
-      Api.get(`/client/findone/${this.search}`, {
-        headers: {
-          "x-access-token": localStorage.getItem("accessToken"),
-        },
-      })
-        .then((response) => {
-          this.client = response.data;
-          this.controller = 1;
-          this.msg = "";
-        })
-        .catch((err) => {
-          this.msg = err.response.data.message;
-        });
-    },
+    
     send() {
-      this.success = "";
+      this.$router.push({
+        name: "listorder"
+      });
+      /* this.success = "";
       this.msg = ""
       Api.post(
         `/client/sms`,
@@ -125,7 +105,7 @@ export default {
         })
         .catch((err) => {
           this.msg = err.response.data.message;
-        });
+        });*/
     },
   },
 };

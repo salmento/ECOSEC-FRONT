@@ -9,6 +9,7 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Encomenda from "../views/Encomenda.vue";
 import Listorder from "../views/Listorder.vue";
+import Deliver from "../views/Deliver.vue";
 
 const routes = [ 
   {
@@ -21,8 +22,9 @@ const routes = [
         name: "Encomenda",
         components: { default: Encomenda },
       },
-      {
-        path: "/notificar/:firstname/:lastname/:phoneNumber",
+      { 
+        path: "/notificar",
+        //path: "/notificar/:firstname/:lastname/:phoneNumber",
         name: "SMS",
         components: { default: Sms },
       },
@@ -43,9 +45,9 @@ const routes = [
         components: { default: Listorder },
       },
       {
-        path: "/entrega",
-        name: "entrega",
-        components: { default: Register },
+        path: "/deliver",
+        name: "deliver",
+        components: { default: Deliver },
       },
     ],
   },

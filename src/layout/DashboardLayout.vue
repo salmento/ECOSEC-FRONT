@@ -28,7 +28,7 @@
           :link="{
             name: 'Entrega',
             icon: 'fas fa-shipping-fast text-success',
-            path: '/list',
+            path: '/deliver',
           }"
         />
       </template>
