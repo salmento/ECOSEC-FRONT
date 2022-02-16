@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 import DashboardLayout from "@/layout/DashboardLayout";
 import AuthLayout from "@/layout/AuthLayout";
+import DashboardAdmin from "@/layout/DashboardAdmin";
 
 import Sms from "../views/Sms.vue";
 import List from "../views/List.vue";
@@ -60,6 +61,28 @@ const routes = [
         path: "/login",
         name: "login",
         components: { default: Login },
+      },
+    ],
+  },
+  {
+    path: "/",
+    redirect: "admin",
+    component: DashboardAdmin,
+    children: [
+      {
+        path: "/",
+        name:"Relatorio",
+        components: { default: Login },
+      },
+      {
+        path: "/promotion",
+        name: "promotion",
+        components: { default: Login },
+      },
+      {
+        path: "/client",
+        name: "client",
+        components: { default: List },
       },
     ],
   },

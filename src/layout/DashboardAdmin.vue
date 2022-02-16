@@ -12,14 +12,14 @@
 
         <sidebar-item
           :link="{
-            name: 'Registar Encomenda',
+            name: 'Registar encomenda',
             icon: 'ni ni-books text-blue',
             path: '/encomenda',
           }"
         />
         <sidebar-item
           :link="{
-            name: 'Consultar Encomenda',
+            name: 'Consultar encomenda',
             icon: 'ni ni-bullet-list-67 text-yellow',
             path: '/listorder',
           }"
