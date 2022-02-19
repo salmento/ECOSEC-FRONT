@@ -46,11 +46,11 @@ export default {
     };
   },
   mounted() {
-    if (localStorage.accessToken) {
+   /* if (localStorage.accessToken) {
       this.user = localStorage.firstname + " " + localStorage.lastname;
     } else {
       this.$router.push("login");
-    }
+    }*/
   },
   methods: {
     logout() {

@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-content-center">
     <div class="mt-lg-7 mt-2 mx-auto">
-      <div class="card bg-default px-auto shadow border-0 table-responsive">
+      <div class="card bg-default px-auto shadow border-0 ">
         <div class="card-header py-lg-5">
           <div class="row mb-4 ml-1 ">
             <input
