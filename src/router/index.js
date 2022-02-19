@@ -5,12 +5,13 @@ import AuthLayout from "@/layout/AuthLayout";
 import DashboardAdmin from "@/layout/DashboardAdmin";
 
 import Sms from "../views/Sms.vue";
-import List from "../views/List.vue";
+import Client from "../views/Client.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Encomenda from "../views/Encomenda.vue";
 import Listorder from "../views/Listorder.vue";
 import Deliver from "../views/Deliver.vue";
+import User from "../views/User.vue";
 
 const routes = [ 
   {
@@ -28,12 +29,6 @@ const routes = [
         //path: "/notificar/:firstname/:lastname/:phoneNumber",
         name: "SMS",
         components: { default: Sms },
-      },
-
-      {
-        path: "/list",
-        name: "List",
-        components: { default: List },
       },
       {
         path: "/register",
@@ -66,12 +61,12 @@ const routes = [
   },
   {
     path: "/",
-    redirect: "admin",
+    redirect: "client",
     component: DashboardAdmin,
     children: [
       {
-        path: "/",
-        name:"Relatorio",
+        path: "/report",
+        name:"report",
         components: { default: Login },
       },
       {
@@ -82,8 +77,14 @@ const routes = [
       {
         path: "/client",
         name: "client",
-        components: { default: List },
+        components: { default: Client },
       },
+      {
+        path: "/user",
+        name: "user",
+        components: { default: User },
+      }
+      
     ],
   },
 ];

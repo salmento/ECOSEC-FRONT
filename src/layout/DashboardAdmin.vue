@@ -4,31 +4,31 @@
       <template v-slot:links>
         <sidebar-item
           :link="{
-            name: 'Registar',
-            icon: 'ni ni-single-02 text-pink',
-            path: '/register',
+            name: 'Consultar Cliente',
+            icon: 'fa fa-address-card text-pink',
+            path: '/client',
           }"
         />
 
         <sidebar-item
           :link="{
-            name: 'Registar encomenda',
-            icon: 'ni ni-books text-blue',
-            path: '/encomenda',
+            name: 'Promoções',
+            icon: 'ni ni-satisfied text-blue',
+            path: '/promotion',
           }"
         />
         <sidebar-item
           :link="{
-            name: 'Consultar encomenda',
-            icon: 'ni ni-bullet-list-67 text-yellow',
-            path: '/listorder',
+            name: 'Relatorio',
+            icon: 'ni ni-single-copy-04 text-yellow',
+            path: '/report',
           }"
         />
-        <sidebar-item
+         <sidebar-item
           :link="{
-            name: 'Entrega',
-            icon: 'fas fa-shipping-fast text-success',
-            path: '/deliver',
+            name: 'Utilizadores',
+            icon: 'ni ni-single-02 text-success',
+            path: '/user',
           }"
         />
       </template>

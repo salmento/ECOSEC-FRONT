@@ -37,7 +37,7 @@
   </div>
 </template>
 <script>
-import Api from "../service/api";
+//import Api from "../service/api";
 
 export default {
   name: "login",
@@ -49,8 +49,11 @@ export default {
     };
   },
   methods: {
+
     login() {
-      Api.post("/auth/login", {
+      this.$router.push("/report");
+      
+      /*Api.post("/auth/login", {
         username: this.username,
         password: this.password,
       })
@@ -62,7 +65,7 @@ export default {
         })
         .catch((err) => {
           this.msg = err.response.data.message;
-        });
+        });*/
     },
   },
 };
