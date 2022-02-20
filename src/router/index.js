@@ -12,8 +12,12 @@ import Encomenda from "../views/Encomenda.vue";
 import Listorder from "../views/Listorder.vue";
 import Deliver from "../views/Deliver.vue";
 import User from "../views/User.vue";
+import Createuser from "../views/Createuser.vue";
+import Report from "../views/Report.vue";
+import ListReportOrder from "../views/Listorder.Report.vue";
+import ListReportUser from "../views/Listuser.Report.vue";
 
-const routes = [ 
+const routes = [
   {
     path: "/",
     redirect: "/register",
@@ -24,7 +28,7 @@ const routes = [
         name: "Encomenda",
         components: { default: Encomenda },
       },
-      { 
+      {
         path: "/notificar",
         //path: "/notificar/:firstname/:lastname/:phoneNumber",
         name: "SMS",
@@ -66,8 +70,8 @@ const routes = [
     children: [
       {
         path: "/report",
-        name:"report",
-        components: { default: Login },
+        name: "report",
+        components: { default: Report },
       },
       {
         path: "/promotion",
@@ -83,10 +87,32 @@ const routes = [
         path: "/user",
         name: "user",
         components: { default: User },
+      },
+      {
+        path: "/create/user",
+        name: "createuser",
+        components: {
+          default: Createuser,
+        },
+      },
+      {
+        path: "/admin/orders",
+        name: "adminorder",
+        components: {
+          default: ListReportOrder,
+        },
+      },
+      {
+        path: "/admin/works",
+        name: "adminwork",
+        components: {
+          default: ListReportUser ,
+        },
       }
       
     ],
   },
+  
 ];
 
 const router = createRouter({

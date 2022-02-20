@@ -28,7 +28,7 @@
           <base-button
             type="primary"
             class="btn btn-outline-success"
-            @click="login()"
+            @click="createUser()"
             >Criar user</base-button
           >
         </div>
@@ -46,7 +46,6 @@
           <th>Nome</th>
           <th>Apelido</th>
           <th>Nr. telefone</th>
-          <th>T. Cliente</th>
           <th>Função</th>
           <th>Estado</th>
           <th>Acção</th>
@@ -57,7 +56,6 @@
           <td>{{ row.item.name }}</td>
           <td>{{ row.item.surname }}</td>
           <td>{{ row.item.telefone }}</td>
-          <td>{{ row.item.typeclient }}</td>
           <td>{{ row.item.role }}</td>
           <td>{{ row.item.status }}</td>
           <td>
@@ -81,7 +79,7 @@
   </div>
 </template>
 <script>
-import Api from "../service/api";
+//import Api from "../service/api";
 export default {
   name: "tables",
   data() {
@@ -95,7 +93,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },
@@ -105,7 +103,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },{
@@ -114,7 +112,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },{
@@ -123,7 +121,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },{
@@ -132,7 +130,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },
@@ -142,7 +140,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },{
@@ -151,7 +149,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },{
@@ -160,7 +158,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },
@@ -170,7 +168,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },{
@@ -179,7 +177,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },{
@@ -188,7 +186,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },
@@ -198,7 +196,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },{
@@ -207,7 +205,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },{
@@ -216,7 +214,7 @@ export default {
           name: "Salmento",
           surname: "Chitlango",
           telefone: 849229754,
-          typeclient: "Empresarial",
+          
           role: "Operador",
           status: "Activo"
         },
@@ -224,6 +222,12 @@ export default {
     };
   },
   methods: {
+
+    createUser(){
+      this.$router.push({
+        name: "createuser",
+      })
+    },
     notifications(firstname, lastname, phoneNumber) {
       this.$router.push({
         name: "SMS",
@@ -232,7 +236,7 @@ export default {
     },
   },
   mounted() {
-    Api.get("/client/findall", {
+    /*Api.get("/client/findall", {
       headers: {
         "x-access-token": localStorage.getItem("accessToken"),
       },
@@ -247,9 +251,9 @@ export default {
       })
       .catch((err) => {
         this.msg = err.response.data.message;
-      });
+      });*/
   },
-};
+}
 </script>
 <style scoped>
 .table th,

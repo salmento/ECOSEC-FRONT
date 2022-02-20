@@ -24,7 +24,7 @@
             </template>
             <div class="dropdown-divider"></div>
             <span class="ml-5 text-sm text-primary">{{ user }}</span>
-            <a href="/login" class="dropdown-item" @click="logout()">
+            <a href="#/login" class="dropdown-item" @click="logout()">
               <i class="ni ni-user-run"></i>
               <span>Logout</span>
             </a>
