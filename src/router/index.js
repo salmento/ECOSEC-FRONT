@@ -16,6 +16,7 @@ import Createuser from "../views/Createuser.vue";
 import Report from "../views/Report.vue";
 import ListReportOrder from "../views/Listorder.Report.vue";
 import ListReportUser from "../views/Listuser.Report.vue";
+import Promotion from "../views/Promotion.vue"
 
 const routes = [
   {
@@ -76,7 +77,7 @@ const routes = [
       {
         path: "/promotion",
         name: "promotion",
-        components: { default: Login },
+        components: { default: Promotion },
       },
       {
         path: "/client",
