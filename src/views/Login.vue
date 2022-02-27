@@ -37,7 +37,8 @@
   </div>
 </template>
 <script>
-//import Api from "../service/api";
+import Api from "../service/api";
+import roles from "../config/roles.json";
 
 export default {
   name: "login",
@@ -49,23 +50,29 @@ export default {
     };
   },
   methods: {
-
     login() {
-      this.$router.push("/report");
-      
-      /*Api.post("/auth/login", {
+      Api.post("/auth/login", {
         username: this.username,
         password: this.password,
       })
         .then((response) => {
-          localStorage.setItem("accessToken", response.data.accessToken);
-          localStorage.setItem("firstname", response.data.firstname);
-          localStorage.setItem("lastname", response.data.lastname);
-          this.$router.push("/register");
+          if (response.data) {
+            localStorage.setItem("accessToken", response.data.accessToken);
+            localStorage.setItem("firstname", response.data.firstname);
+            localStorage.setItem("lastname", response.data.lastname);
+            if (response.data.role == roles.operator) {
+              console.log("operator")
+              this.$router.push("/register");
+            }
+            if (response.data.role == roles.gestor) {
+              console.log("Register")
+              this.$router.push("/report");
+            }
+          }
         })
         .catch((err) => {
           this.msg = err.response.data.message;
-        });*/
+        });
     },
   },
 };

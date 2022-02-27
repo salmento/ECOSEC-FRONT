@@ -82,7 +82,7 @@
   </div>
 </template>
 <script>
-// import Api from "../service/api";
+import Api from "../service/api";
 
 export default {
   name: "register",
@@ -102,7 +102,7 @@ export default {
       this.$router.push({
         name: "Encomenda",
       });
-      /*
+      
       this.success = "";
       this.msg = "";
       Api.post(
@@ -127,7 +127,7 @@ export default {
         })
         .catch((err) => {
           this.msg = err.response.data.message;
-        });*/
+        });
     },
   },
 };
