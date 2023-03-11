@@ -1,39 +1,84 @@
 {
-  "name": "vue-argon-dashboard",
-  "version": "2.0.1",
-  "private": true,
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+  "name": "argon-dashboard-react",
+  "version": "1.2.2",
+  "description": "React version of Argon Dashboard by Creative Tim",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creativetimofficial.git"
   },
+  "keywords": [
+    "react",
+    "reactjs",
+    "argon",
+    "argon-react",
+    "dashboard",
+    "dashboard-react",
+    "argon-dashboard",
+    "argon-dashboard-react"
+  ],
+  "author": "Creative Tim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/creativetimofficial/issues"
+  },
+  "homepage": "https://demos.creative-tim.com/",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
+    "compile:scss": "sass src/assets/scss.scss src/assets/css.css",
+    "minify:scss": "sass src/assets/scss.scss src/assets/css.min.css --style compressed",
+    "build:scss": "npm run compile:scss && npm run minify:scss && npm run map:scss"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "dependencies": {
-    "axios": "^0.24.0",
-    "bootstrap": "4.6.0",
-    "bootstrap-vue": "2.15.0",
+    "@fortawesome/fontawesome-free": "5.15.3",
+    "autoprefixer": "10.4.5",
+    "axios": "^1.2.2",
+    "bootstrap": "^4.6.0",
     "chart.js": "2.9.4",
-    "core-js": "3.6.5",
-    "element-plus": "1.0.1-beta.24",
-    "google-maps": "4.3.3",
-    "nouislider": "14.6.0",
-    "vue": "3.0.5",
-    "vue-router": "4.0.1",
-    "vue-toastification": "1.7.11"
+    "classnames": "2.3.1",
+    "html-to-image": "^1.11.11",
+    "jspdf": "^2.5.1",
+    "jspdf-react": "^1.0.11",
+    "moment": "2.29.4",
+    "nouislider": "15.2.0",
+    "react": ">=16.0.0",
+    "react-chartjs-2": "2.11.1",
+    "react-copy-to-clipboard": "5.1.0",
+    "react-datetime": "3.1.1",
+    "react-dom": "^18.2.0",
+    "react-html-table-to-excel": "^2.0.0",
+    "react-idle-timer": "^5.4.2",
+    "react-router-dom": "5.2.0",
+    "react-scripts": "5.0.1",
+    "react-to-print": "^2.14.11",
+    "reactstrap": "8.9.0",
+    "sass": "1.54.5"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "4.5.10",
-    "@vue/cli-plugin-eslint": "4.5.10",
-    "@vue/cli-plugin-router": "4.5.10",
-    "@vue/cli-service": "4.5.10",
-    "@vue/compiler-sfc": "3.0.5",
-    "@vue/eslint-config-prettier": "6.0.0",
-    "babel-eslint": "10.1.0",
-    "babel-plugin-component": "1.1.1",
-    "eslint": "7.17.0",
-    "eslint-plugin-prettier": "3.3.1",
-    "eslint-plugin-vue": "7.4.1",
-    "node-sass": "5.0.0",
-    "prettier": "2.2.1",
-    "sass-loader": "10.1.1"
+    "gulp": "^4.0.2",
+    "gulp-append-prepend": "^1.0.9"
+  },
+  "peerDependencies": {
+    "react": ">=16.0.0"
+  },
+  "optionalDependencies": {
+    "jquery": "3.6.0",
+    "typescript": "4.8.2"
+  },
+  "overrides": {
+    "autoprefixer": "10.4.5"
   }
 }
