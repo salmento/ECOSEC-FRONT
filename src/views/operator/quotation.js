@@ -271,10 +271,14 @@ const Order = function () {
       div {
        width: -moz-fit-content;
         width: fit-content;
-        font-family: "Helvetica Oblique";
-        font-size: 24pt;
-        margin:0;
+        font-weight: normal;
+        font-family: " Georgia, serif";
+        font-size: 1rem;
+        font-variant: normal;
         padding:0;
+        color: 000000;
+        -webkit-print-color-adjust: exact; 
+        height: fit-content;
       }
       
       @page {
@@ -507,31 +511,27 @@ const Order = function () {
               <CardBody className="mt-0">
                 <Row>
                   <Col>{
-                    isPrint ? <Table
-                      className="align-items-center"
-                      responsive
-                      bordered
-                    >
-                      <thead className="text-darker">
-                        <tr >
-                          <th scope="col" className="font-weight-bolder p-1 text-uppercase">Qt</th>
-                          <th scope="col" className="p-1 font-weight-bolder text-uppercase">Descrição</th>
-                          <th scope="col" className="p-1 font-weight-bolder text-uppercase">P.Unidade</th>
-                          <th scope="col" className="p-1 font-weight-bolder text-uppercase">Subtotal</th>
-                          <th scope="col" className="p-1 font-weight-bolder text-uppercase">Comentario</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-darker p-0">
-                        {orders?.map((order, index) => (
-                          <tr key={index} value={order}>
-                            <td className="p-1 font-weight-bolder text-uppercase">{order?.quantity}</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{order?.family}</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{parseFloat(order?.subTotal).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{order?.observation}</td>
-                          </tr>
-                        ))}
-                      </tbody> </Table> :
+                  isPrint ? <Col className="p-0">
+
+                    <ul className=" text-darker ni-ul p-0 m-0">
+                      <li style={{ float: "left", display: "block", width: "30px", height: "30px", margin: 0, padding: 0 }}  ><h3 className="text-darker">QT</h3></li>
+                      <li style={{ float: "left", display: "block", width: "120px", height: "30px", margin: 0, padding: 0 }}><h3 className="text-darker">Descrição</h3></li>
+                      <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }}><h3 className="text-darker">P.Unidade</h3></li>
+                      <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">Subtotal</h3></li>
+                      <li style={{ float: "left", display: "block", width: "80px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">Obs</h3></li>
+                    </ul>
+                    {orders?.map((order, index) => (
+                      <ul className=" text-darker ni-ul p-0 m-0" key={index} value={order}>
+                        <li style={{ float: "left", display: "block", width: "30px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{order?.quantity}</h3></li>
+                        <li style={{ float: "left", display: "block", width: "120px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{order?.family}</h3></li>
+                        <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3></li>
+                        <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{parseFloat(order?.subTotal).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3></li>
+                        <li style={{ float: "left", display: "block", width: "80px", height: "30px", margin: 0, padding: 0 }}><h3 className="text-darker">{order?.observation}</h3></li>
+                      </ul>
+                    ))}
+                  </Col>
+
+                    :
                       <Table
                         className="align-items-center"
                         responsive

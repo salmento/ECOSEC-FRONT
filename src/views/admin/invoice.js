@@ -132,11 +132,12 @@ const Invoices = () => {
       div {
        width: -moz-fit-content;
         width: fit-content;
-        font-family: "Helvetica Oblique";
+        font-family: " Georgia, serif";
         font-size: 24pt;
         margin:0;
         padding:0;
       }
+      
       
       @page {
         size: 100mm 140mm;
@@ -263,6 +264,7 @@ const Invoices = () => {
           <div ref={printRef}>
             <style type="text/css" media="print">{"@page {size: portrait;}"}</style>
             <Card className={isPrint ? "" : "mt-7"}>
+              
               <CardHeader className=" border-0 text-center text-uppercase">
 
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >ECOSEC Lavandaria</h3>
@@ -283,6 +285,26 @@ const Invoices = () => {
               <CardBody className="mt-0">
                 <Row>
                   <Col>
+                    {
+                      isPrint ? <Col className="p-0">
+
+                        <ul className=" text-darker ni-ul p-0 m-0">
+                          <li style={{ float: "left", display: "block", width: "30px", height: "30px", margin: 0, padding: 0 }}  ><h3 className="text-darker">QT</h3></li>
+                          <li style={{ float: "left", display: "block", width: "120px", height: "30px", margin: 0, padding: 0 }}><h3 className="text-darker">Descrição</h3></li>
+                          <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }}><h3 className="text-darker">P.Unidade</h3></li>
+                          <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">Subtotal</h3></li>
+                          <li style={{ float: "left", display: "block", width: "80px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">Obs</h3></li>
+                        </ul>
+                        {orders?.map((order, index) => (
+                          <ul className=" text-darker ni-ul p-0 m-0" key={index} value={order}>
+                            <li style={{ float: "left", display: "block", width: "30px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{order?.quantity}</h3></li>
+                            <li style={{ float: "left", display: "block", width: "120px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{order?.family}</h3></li>
+                            <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3></li>
+                            <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{parseFloat(order?.subTotal).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3></li>
+                            <li style={{ float: "left", display: "block", width: "80px", height: "30px", margin: 0, padding: 0 }}><h3 className="text-darker">{order?.observation}</h3></li>
+                          </ul>
+                        ))}
+                      </Col> :
                     <Table
                       className="align-items-center "
                       responsive
@@ -311,6 +333,7 @@ const Invoices = () => {
 
                       </tbody>
                     </Table>
+}
                   </Col>
 
 

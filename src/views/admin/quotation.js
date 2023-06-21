@@ -223,7 +223,7 @@ const Order = function () {
         setSuccess(response?.data?.message)
         successRef?.current?.focus();
         setIsPrint(false)
-        setCount(count+1)
+        setCount(count + 1)
       } catch (err) {
         setIsPrint(false)
         setSuccess("")
@@ -267,18 +267,23 @@ const Order = function () {
 
   const Printer = useReactToPrint({
     pageStyle: `@media print {
+
     
       div {
-       width: -moz-fit-content;
+        width: -moz-fit-content;
         width: fit-content;
-        font-family: "Helvetica Oblique";
-        font-size: 24pt;
-        margin:0;
+        font-weight: normal;
+        font-family: " Georgia, serif";
+        font-size: 1rem;
+        font-variant: normal;
         padding:0;
+        color: 000000;
+        -webkit-print-color-adjust: exact; 
+        height: fit-content;
       }
       
       @page {
-        size: 80mm 140mm;
+        size: 100mm 140mm;
       } 
     }`,
     content: () => printRef.current,
@@ -334,9 +339,9 @@ const Order = function () {
                   Visualizar  cotacao <i className="fas fa-arrow-right"></i>
                 </Button>
               </Col>
-                  
+
             </Row>
-                  
+
 
             <CardHeader className="text-center border-0 pt-2 pt-md-4 pb-0 pb-md-0">
               <h3 className="mb-0 text-default">Facturação e Cotação</h3>
@@ -484,101 +489,93 @@ const Order = function () {
           </Card>
         </Col>
 
-        <Col className="order-xl-1 text-darker text-uppercase font-weight-bolder" xl="6" id="print"   >
+        <Col className="order-xl-1 text-darker " xl="6" id="print"   >
           <div className="" ref={printRef}>
-            <style type="text/css" media="print">{"@page {size: portrait;}"}</style>
+            <style type="text/css" media="print">{"@page {size: 100mm 140mm;}"}</style>
             <Card className={isPrint ? "" : " mt-7 "} >
-              <CardHeader className=" border-0 text-center text-uppercase ">
+              <CardHeader className=" border-0 text-center  ">
 
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >ECOSEC Lavandaria</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Nuit: {location?.nuit}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location?.name}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location?.location}</h3>
-                <h3 className="text-darker font-weight-bolder" >Tel: {location?.phoneNumber1 ? location?.phoneNumber1 : ""}  {location?.phoneNumber2 ? location?.phoneNumber2 : ""}  {location?.phoneNumber3 ? location?.phoneNumber3 : ""}</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >Tel: {location?.phoneNumber1 ? location?.phoneNumber1 : ""}  {location?.phoneNumber2 ? location?.phoneNumber2 : ""}  {location?.phoneNumber3 ? location?.phoneNumber3 : ""}</h3>
 
               </CardHeader>
-              <h3 className="m-0  text-darker pl-2 font-weight-bolder text-uppercase">Codigo: {clientId} </h3>
-              <h3 className="m-0 text-darker  pl-2 font-weight-bolder text-uppercase" >Nome: {name} {surname}</h3>
-              <h3 className="m-0  text-darker pl-2 font-weight-bolder text-uppercase">Morada:  {address}</h3>
-              <h3 className="m-0  text-darker pl-2 font-weight-bolder text-uppercase">Contacto: {phoneNumber}</h3><br></br>
+              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Codigo: {clientId} </h3>
+              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Nome: {name} {surname}</h3>
+              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Morada:  {address}</h3>
+              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Contacto: {phoneNumber}</h3><br></br>
 
-              <h3 className="m-0  p-0   pl-2 text-darker font-weight-bolder text-uppercase">Cotação: {quotationRef}</h3>
-              <h3 className="m-0  p-0 pl-2 text-darker font-weight-bolder text-uppercase">Data: {new Date().toUTCString()}</h3>
+              <h3 className="m-0  p-0   pl-4 text-darker ">Cotação: {quotationRef}</h3>
+              <h3 className="m-0  p-0 pl-4 text-darker ">Data: {new Date().toUTCString()}</h3>
               <CardBody className="mt-0">
                 <Row>
                   <Col>{
-                    isPrint ? <Table
-                      className="align-items-center"
-                      responsive
-                      bordered
-                      >
-                      <thead className="text-darker">
-                        <tr >
-                          <th scope="col" className="font-weight-bolder p-1 text-uppercase">Qt</th>
-                          <th scope="col" className="p-1 font-weight-bolder text-uppercase">Descrição</th>
-                          <th scope="col" className="p-1 font-weight-bolder text-uppercase">P.Unidade</th>
-                          <th scope="col" className="p-1 font-weight-bolder text-uppercase">Subtotal</th>
-                          <th scope="col" className="p-1 font-weight-bolder text-uppercase">Comentario</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-darker p-0">
-                        {orders?.map((order, index) => (
-                          <tr key={index} value={order}>
-                            <td className="p-1 font-weight-bolder text-uppercase">{order?.quantity}</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{order?.family}</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{parseFloat(order?.subTotal).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{order?.observation}</td>
-                          </tr>
-                        ))}
-                      </tbody> </Table> :
+                    isPrint ? <Col className="p-0">
+
+                      <ul className=" text-darker ni-ul p-0 m-0">
+                        <li style={{ float: "left", display: "block", width: "30px", height: "30px", margin: 0, padding: 0 }}  ><h3 className="text-darker">QT</h3></li>
+                        <li style={{ float: "left", display: "block", width: "120px", height: "30px", margin: 0, padding: 0 }}><h3 className="text-darker">Descrição</h3></li>
+                        <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }}><h3 className="text-darker">P.Unidade</h3></li>
+                        <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">Subtotal</h3></li>
+                        <li style={{ float: "left", display: "block", width: "80px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">Obs</h3></li>
+                      </ul>
+                      {orders?.map((order, index) => (
+                        <ul className=" text-darker ni-ul p-0 m-0" key={index} value={order}>
+                          <li style={{ float: "left", display: "block", width: "30px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{order?.quantity}</h3></li>
+                          <li style={{ float: "left", display: "block", width: "120px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{order?.family}</h3></li>
+                          <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3></li>
+                          <li style={{ float: "left", display: "block", width: "100px", height: "30px", margin: 0, padding: 0 }} ><h3 className="text-darker">{parseFloat(order?.subTotal).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3></li>
+                          <li style={{ float: "left", display: "block", width: "80px", height: "30px", margin: 0, padding: 0 }}><h3 className="text-darker">{order?.observation}</h3></li>
+                        </ul>
+                      ))}
+                    </Col>
+
+                      :
+
                       <Table
                         className="align-items-center"
                         responsive
                         bordered
-                        >
+                      >
                         <thead className="text-darker">
                           <tr >
-                            <th scope="col" className="p-1 font-weight-bolder text-uppercase ">Qt</th>
-                            <th scope="col" className="p-1 font-weight-bolder text-uppercase">Descrição</th>
-                            <th scope="col" className="p-1 font-weight-bolder text-uppercase">P.Unidade</th>
-                            <th scope="col" className="p-1 font-weight-bolder text-uppercase">Subtotal</th>
-                            <th scope="col" className="p-1 font-weight-bolder text-uppercase">Comentario</th>
-                            <th scope="col" className="p-1 font-weight-bolder text-uppercase">Acção</th>
+                            <th scope="col" className="p-1  ">Qt</th>
+                            <th scope="col" className="p-1 ">Descrição</th>
+                            <th scope="col" className="p-1 ">P.Unidade</th>
+                            <th scope="col" className="p-1 ">Subtotal</th>
+                            <th scope="col" className="p-1 ">Comentario</th>
+                            <th scope="col" className="p-1 ">Acção</th>
                           </tr>
                         </thead>
                         <tbody className="text-darker p-0">
                           {orders?.map((order, index) => (
                             <tr key={index} value={order}>
-                              <td className=" p-1 font-weight-bolder text-uppercase">{order?.quantity}</td>
-                              <td className=" p-1 font-weight-bolder text-uppercase">{order?.family}</td>
-                              <td className=" p-1 font-weight-bolder text-uppercase">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                              <td className=" p-1 font-weight-bolder text-uppercase">{parseFloat(order?.subTotal).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                              <td className=" p-1 font-weight-bolder text-uppercase">{order?.observation}</td>
-                              <td className=" p-1 font-weight-bolder text-uppercase"><button value={order} className="btn btn-warning p-1" onClick={(e) => {
+                              <td className=" p-1 ">{order?.quantity}</td>
+                              <td className=" p-1 ">{order?.family}</td>
+                              <td className=" p-1 ">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
+                              <td className=" p-1 ">{parseFloat(order?.subTotal).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
+                              <td className=" p-1 ">{order?.observation}</td>
+                              <td className=" p-1 "><button value={order} className="btn btn-warning p-1" onClick={(e) => {
                                 e.preventDefault();
                                 removeOrder(order)
-                              }} ><i className="ni ni-fat-delete text-uppercase"></i> Remover</button></td>
+                              }} ><i className="ni ni-fat-delete"></i> Remover</button></td>
                             </tr>
                           ))}
                         </tbody></Table>
-                  }
-
+}
                   </Col>
 
 
                 </Row>
 
-                <h3 className="text-darker  p-0 font-weight-bolder m-0" >Total a pagar: {parseFloat(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3>
+                <h3 className="text-darker  p-0  mt-3" >Total a pagar: {parseFloat(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >IVA: 16 %</h3>
-                <hr style={{
-                  width: "98%",
-                  marginLeft: 0,
-                  borderColor: "info"
-                }} />
-                <h3 className="text-uppercase   text-darker  font-weight-bolder p-0 m-0">O levantamento das roupas deve ser feito  </h3>
-                <h3 className="text-uppercase  text-darker  font-weight-bolder  p-0 m-0">dentro de 30 dias, fora do prazo estabelecido</h3>
-                <h3 className="text-uppercase  text-darker  font-weight-bolder  p-0 m-0"> não nos responsabilizamos, Obrigado!</h3>
+
+                <h3 className=" text-darker text-center  p-0 m-0">O levantamento das roupas deve ser feito  </h3>
+                <h3 className=" text-darker   text-center p-0 m-0">dentro de 30 dias, fora do prazo estabelecido</h3>
+                <h3 className=" text-darker   text-center p-0 m-0"> não nos responsabilizamos, Obrigado!</h3>
 
 
               </CardBody>
