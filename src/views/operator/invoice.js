@@ -343,9 +343,10 @@ const Invoices = () => {
                   borderColor: "info"
                 }} />
 
-                <h3 className="text-uppercase   text-darker  font-weight-bolder p-0 m-0">O levantamento das roupas deve ser feito  </h3>
-                <h3 className="text-uppercase  text-darker  font-weight-bolder  p-0 m-0">dentro de 30 dias, fora do prazo estabelecido</h3>
-                <h3 className="text-uppercase  text-darker  font-weight-bolder  p-0 m-0"> não nos responsabilizamos, Obrigado!</h3>
+                <h3 className=" text-darker text-center  p-0 m-0">O levantamento das roupas deve ser feito  </h3>
+                <h3 className=" text-darker   text-center p-0 m-0">dentro de 30 dias, fora do prazo estabelecido</h3>
+                <h3 className=" text-darker   text-center p-0 m-0"> não nos responsabilizamos, Obrigado!</h3>
+
               </CardBody>
 
             </Card>
