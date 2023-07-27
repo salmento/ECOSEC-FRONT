@@ -49,6 +49,7 @@ const Order = function () {
   const [isPrint, setIsPrint] = useState(false)
   const [quotationRef, setQuotationRef] = useState("")
   const [count, setCount] = useState(0)
+  const [urgente, setUrgent] = useState("")
 
 
   const removeOrder = (order) => {
@@ -125,6 +126,7 @@ const Order = function () {
       if (index !== "1000000") {
 
         setFamily(article?.name ? article?.name : "")
+        setUrgent(article.name)
         setPrince(article?.prince ? article?.prince : "")
       }
     }
@@ -435,8 +437,7 @@ const Order = function () {
                         type="number"
                         min={1}
                         value={prince}
-                        readOnly
-                        disabled={clientId ? false : true}
+                        disabled={ urgente==="urgencia" ? false : true}
                         className="text-uppercase text-default"
                         onChange={(e) => setPrince(e.target.value)}
                       />

@@ -57,12 +57,12 @@ const Invoices = () => {
   const [isPrint, setIsPrint] = useState(false)
 
   useEffect(() => {
-    setPaymentMissing(total >= payedMoney ? parseFloat(parseFloat(total) - parseFloat(payedMoney)).toFixed(2) : parseFloat(0).toFixed(2))
+    setPaymentMissing(total >= payedMoney ? parseFloat(parseFloat(total) - parseFloat(payedMoney)).toFixed(2) : parseFloat(paymentMissing).toFixed(2))
 
     setPaymentStatus(parseFloat(total) <= parseFloat(payedMoney) ? paymentStatusConfig.payed : parseFloat(payedMoney) === 0 ? paymentStatusConfig.notPayed : paymentStatusConfig.partiallyPayed)
 
-    setPayChange(payedMoney >= total ? parseFloat(parseFloat(payedMoney) - parseFloat(total)).toFixed(2) : parseFloat(0))
-  }, [payedMoney, total])
+    setPayChange(payedMoney >= total ? parseFloat(parseFloat(payedMoney) - parseFloat(total)).toFixed(2) : parseFloat(payChange).toFixed(2))
+  }, [payedMoney, total, paymentMissing, payChange])
 
   const HandleMoneyPayment = (ismoney, isOther, paymentmethod) => {
     setIsMoney(ismoney)
@@ -83,13 +83,16 @@ const Invoices = () => {
           );
           setOrder(response?.data)
           const ref = response?.data?.orderRef.substring(2, response?.data?.orderRef?.length)
-          const finalRef = `RE${ref}`
+          let finalRef = `RE${ref}`
+          if (response?.data?.receiptRef) finalRef = `RE${ref}_2`
+          
           setReceiptRef(finalRef)
-          setTotal(response?.data?.totalToPay)
+          setTotal(response?.data?.paymentMissing)
           setOrders(JSON.parse(response?.data?.order))
-          setPayedMoney(response?.data?.payedMoney)
+          setPayedMoney(0)
           setPaymentMissing(response?.data?.paymentMissing)
           setPaymentStatus(response?.data?.paymentStatus)
+          setPayChange(0)
           setClientId(response?.data?.clientId)
           setError("")
           setSuccess("")
@@ -126,7 +129,7 @@ const Invoices = () => {
   const handlePayment = async (event) => {
     setIsPrint(true)
     event.preventDefault()
-    if (parseFloat(total) <= parseFloat(payedMoney)) {
+    if (payedMoney) {
 
       try {
         const response = await axios.post(`receipt/payment/`,

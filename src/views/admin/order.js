@@ -55,6 +55,7 @@ const Order = function () {
   const tax = 16
   const [observation, setObservation] = useState("")
   const [isPrint, setIsPrint] = useState(false)
+  const [urgent, setUrgent] = useState("")
 
 
   const removeOrder = (order) => {
@@ -117,6 +118,7 @@ const Order = function () {
       if (index !== "1000000") {
         setFamily(article?.name ? article?.name : "")
         setPrince(article?.prince ? article?.prince : "")
+        setUrgent(article?.name)
       }
     }
 
@@ -422,8 +424,7 @@ const Order = function () {
                         type="number"
                         min={1}
                         value={prince}
-                        readOnly
-                        disabled={clientId ? false : true}
+                        disabled={ urgent==="urgencia" ? false : true}
                         className="text-uppercase text-default"
                         onChange={(e) => setPrince(e.target.value)}
                       />
