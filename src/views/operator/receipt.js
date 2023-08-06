@@ -33,6 +33,7 @@ const Invoices = () => {
   const [orders, setOrders] = useState([])
   const accessToken = sessionStorage.getItem('accessToken');
   const location = JSON.parse(sessionStorage.getItem('address'));
+  const auth = JSON.parse(sessionStorage.getItem('auth'));
   const errorRef = useRef();
   const successRef = useRef();
   const date = moment().format('MMMM Do YYYY, h:mm:ss a')
@@ -57,12 +58,12 @@ const Invoices = () => {
   const [isPrint, setIsPrint] = useState(false)
 
   useEffect(() => {
-    setPaymentMissing(total >= payedMoney ? parseFloat(parseFloat(total) - parseFloat(payedMoney)).toFixed(2) : parseFloat(0).toFixed(2))
+    setPaymentMissing(total >= payedMoney ? parseFloat(parseFloat(total) - parseFloat(payedMoney)).toFixed(2) : parseFloat(paymentMissing).toFixed(2))
 
     setPaymentStatus(parseFloat(total) <= parseFloat(payedMoney) ? paymentStatusConfig.payed : parseFloat(payedMoney) === 0 ? paymentStatusConfig.notPayed : paymentStatusConfig.partiallyPayed)
 
-    setPayChange(payedMoney >= total ? parseFloat(parseFloat(payedMoney) - parseFloat(total)).toFixed(2) : parseFloat(0))
-  }, [payedMoney, total])
+    setPayChange(payedMoney >= total ? parseFloat(parseFloat(payedMoney) - parseFloat(total)).toFixed(2) : parseFloat(payChange).toFixed(2))
+  }, [payedMoney, total, paymentMissing, payChange])
 
   const HandleMoneyPayment = (ismoney, isOther, paymentmethod) => {
     setIsMoney(ismoney)
@@ -83,13 +84,16 @@ const Invoices = () => {
           );
           setOrder(response?.data)
           const ref = response?.data?.orderRef.substring(2, response?.data?.orderRef?.length)
-          const finalRef = `RE${ref}`
+          let finalRef = `RE${ref}`
+          if (response?.data?.receiptRef) finalRef = `RE${ref}_2`
+
           setReceiptRef(finalRef)
-          setTotal(response?.data?.totalToPay)
+          setTotal(response?.data?.paymentMissing)
           setOrders(JSON.parse(response?.data?.order))
-          setPayedMoney(response?.data?.payedMoney)
+          setPayedMoney(0)
           setPaymentMissing(response?.data?.paymentMissing)
           setPaymentStatus(response?.data?.paymentStatus)
+          setPayChange(0)
           setClientId(response?.data?.clientId)
           setError("")
           setSuccess("")
@@ -126,7 +130,7 @@ const Invoices = () => {
   const handlePayment = async (event) => {
     setIsPrint(true)
     event.preventDefault()
-    if (parseFloat(total) <= parseFloat(payedMoney)) {
+    if (payedMoney) {
 
       try {
         const response = await axios.post(`receipt/payment/`,
@@ -175,7 +179,7 @@ const Invoices = () => {
   const Printer = useReactToPrint({
     pageStyle: `@media print {
       div {
-      width: -moz-fit-content;
+       width: -moz-fit-content;
         width: fit-content;
         font-family: " Georgia, serif";
         font-size: 24pt;
@@ -391,14 +395,14 @@ const Invoices = () => {
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Tel: {location?.phoneNumber1 ? location?.phoneNumber1 : ""}  {location?.phoneNumber2 ? location?.phoneNumber2 : ""}  {location?.phoneNumber3 ? location?.phoneNumber3 : ""}</h3>
 
               </CardHeader>
-              <h3 className="text-darker  pl-2 font-weight-bolder m-0 text-uppercase">Codigo: {order?.clientId}</h3>
-              <h3 className="text-darker  pl-2 font-weight-bolder m-0 text-uppercase" >Nome: {order?.clientName} {order?.clientSurname}</h3>
-              <h3 className="text-darker  pl-2 font-weight-bolder m-0 text-uppercase">Nuit: {order?.clientNuit}</h3>
-              <h3 className="text-darker  pl-2 font-weight-bolder m-0 text-uppercase">Morada:  {order?.clientAddress}</h3>
-              <h3 className="text-darker  pl-2 font-weight-bolder m-0 text-uppercase">Contacto: {order?.clientPhone}</h3>
+              <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Codigo: {order?.clientId};</h3>
+              <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase" >Nome: {order?.clientName} {order?.clientSurname};</h3>
+              <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Nuit: {order?.clientNuit};</h3>
+              <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Morada:  {order?.clientAddress};</h3>
+              <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Contacto: {order?.clientPhone};</h3>
 
-              <h3 className="m-0  p-0   pl-2 text-darker font-weight-bolder text-uppercase">Recibo: {receiptRef}</h3>
-              <h3 className="m-0  p-0   pl-2 text-darker font-weight-bolder text-uppercase">Data: {date}</h3>
+              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Recibo: {receiptRef};</h3>
+              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Data: {date};</h3>
               <CardBody className="mt-0">
                 <Row>
                   <Col>{
@@ -423,35 +427,37 @@ const Invoices = () => {
                     </Col>
 
                       :
-                    <Table
-                      className="align-items-center "
-                      responsive
-                      bordered
-                    >
-                      <thead className="text-darker">
-                        <tr >
-                          <th scope="col" className="font-weight-bolder p-1">Qt</th>
-                          <th scope="col" className="font-weight-bolder p-1">Descrição</th>
-                          <th scope="col" className="font-weight-bolder p-1">P.Unidade</th>
-                          <th scope="col" className="font-weight-bolder p-1">Subtotal</th>
-                          <th scope="col" className="font-weight-bolder p-1">Comentario</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-darker p-0">
-                        {orders?.map((order, index) => (
-                          <tr key={index} value={order}>
-                            <td className="p-1 font-weight-bolder text-uppercase">{order?.quantity}</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{order?.family}</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{parseFloat((parseFloat(order?.prince) * 0.16 + parseFloat(order?.prince)) * order?.quantity).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                            <td className="p-1 font-weight-bolder text-uppercase">{order?.observation}</td>
 
+                      <Table
+                        className="align-items-center "
+                        responsive
+                        bordered
+                      >
+
+                        <thead className="text-darker">
+                          <tr >
+                            <th scope="col" className="font-weight-bolder p-1">Qt</th>
+                            <th scope="col" className="font-weight-bolder p-1">Descrição</th>
+                            <th scope="col" className="font-weight-bolder p-1">P.Unidade</th>
+                            <th scope="col" className="font-weight-bolder p-1">Subtotal</th>
+                            <th scope="col" className="font-weight-bolder p-1">Comentario</th>
                           </tr>
-                        ))}
+                        </thead>
+                        <tbody className="text-darker p-0">
+                          {orders?.map((order, index) => (
+                            <tr key={index} value={order}>
+                              <td className="p-1 font-weight-bolder text-uppercase">{order?.quantity}</td>
+                              <td className="p-1 font-weight-bolder text-uppercase">{order?.family}</td>
+                              <td className="p-1 font-weight-bolder text-uppercase">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
+                              <td className="p-1 font-weight-bolder text-uppercase">{parseFloat((parseFloat(order?.prince) * 0.16 + parseFloat(order?.prince)) * order?.quantity).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
+                              <td className="p-1 font-weight-bolder text-uppercase">{order?.observation}</td>
 
-                      </tbody>
-                    </Table>
-}
+                            </tr>
+                          ))}
+
+                        </tbody>
+                      </Table>
+                  }
                   </Col>
 
 
@@ -467,9 +473,11 @@ const Invoices = () => {
                   borderColor: "info"
                 }} />
                 <h3 className="m-0  p-0 pb-2 pr-2 ">Comentários: {observation}</h3>
+
                 <h3 className=" text-darker text-center  p-0 m-0">O levantamento das roupas deve ser feito  </h3>
                 <h3 className=" text-darker   text-center p-0 m-0">dentro de 30 dias, fora do prazo estabelecido</h3>
                 <h3 className=" text-darker   text-center p-0 m-0"> não nos responsabilizamos, Obrigado!</h3>
+                <h3 className=" text-darker   text-right text-uppercase p-0 m-3"> Vendedor/a: {auth.name} {auth.surname}</h3>
 
               </CardBody>
 

@@ -438,8 +438,8 @@ const Clients = () => {
                                                             <td className="p-1  pl-2">{tirolTotalMostUsedPaymentMethodCheck?.totalPayed}</td>
                                                         </tr>
                                                         <tr key="5" >
-                                                            <td className="p-1  pl-2">Total</td>
-                                                            <td className="p-1  pl-2">{tirolTotalMostUsedPaymentMethodCheck?.totalPayed + tirolTotalMostUsedPaymentMethodMoney?.totalPayed + tirolTotalMostUsedPaymentMethodMobileCard?.totalPayed + tirolTotalMostUsedPaymentMethodPos?.totalPayed}</td>
+                                                            <td className="p-1  pl-2 text-danger font-weight-bold">Total</td>
+                                                            <td className="p-1  pl-2 text-danger font-weight-bold">{tirolTotalMostUsedPaymentMethodCheck?.totalPayed + tirolTotalMostUsedPaymentMethodMoney?.totalPayed + tirolTotalMostUsedPaymentMethodMobileCard?.totalPayed + tirolTotalMostUsedPaymentMethodPos?.totalPayed}</td>
                                                         </tr>
 
 
@@ -486,8 +486,8 @@ const Clients = () => {
                                                         </tr>
 
                                                         <tr key="5" >
-                                                            <td className="p-1  pl-2">Total</td>
-                                                            <td className="p-1  pl-2">{vilaTotalMostUsedPaymentMethodCheck?.totalPayed + vilaTotalMostUsedPaymentMethodMoney?.totalPayed + vilaTotalMostUsedPaymentMethodMobileCard?.totalPayed + vilaTotalMostUsedPaymentMethodPos?.totalPayed}</td>
+                                                            <td className="p-1  pl-2 text-danger font-weight-bold">Total</td>
+                                                            <td className="p-1  pl-2 text-danger font-weight-bold">{vilaTotalMostUsedPaymentMethodCheck?.totalPayed + vilaTotalMostUsedPaymentMethodMoney?.totalPayed + vilaTotalMostUsedPaymentMethodMobileCard?.totalPayed + vilaTotalMostUsedPaymentMethodPos?.totalPayed}</td>
                                                         </tr>
 
                                                     </tbody>
@@ -532,8 +532,8 @@ const Clients = () => {
                                                             <td className="p-1  pl-2"> {interfrancaTotalMostUsedPaymentMethodCheck?.totalPayed}</td>
                                                         </tr>
                                                         <tr key="5" >
-                                                            <td className="p-1  pl-2">Total</td>
-                                                            <td className="p-1  pl-2">{interfrancaTotalMostUsedPaymentMethodCheck?.totalPayed + interfrancaTotalMostUsedPaymentMethodMoney?.totalPayed + interfrancaTotalMostUsedPaymentMethodMobileCard?.totalPayed + interfrancaTotalMostUsedPaymentMethodPos?.totalPayed}</td>
+                                                            <td className="p-1  pl-2 text-danger font-weight-bold">Total</td>
+                                                            <td className="p-1  pl-2 text-danger font-weight-bold">{interfrancaTotalMostUsedPaymentMethodCheck?.totalPayed + interfrancaTotalMostUsedPaymentMethodMoney?.totalPayed + interfrancaTotalMostUsedPaymentMethodMobileCard?.totalPayed + interfrancaTotalMostUsedPaymentMethodPos?.totalPayed}</td>
                                                         </tr>
 
 

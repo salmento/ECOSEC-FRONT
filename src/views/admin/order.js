@@ -27,6 +27,7 @@ import { useReactToPrint } from 'react-to-print';
 const Order = function () {
   const accessToken = sessionStorage.getItem('accessToken');
   const location = JSON.parse(sessionStorage.getItem('address'));
+  const auth = JSON.parse(sessionStorage.getItem('auth'));
   const errorRef = useRef();
   const successRef = useRef();
   const printRef = useRef();
@@ -494,13 +495,13 @@ const Order = function () {
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Tel: {location?.phoneNumber1 ? location?.phoneNumber1 : ""}  {location?.phoneNumber2 ? location?.phoneNumber2 : ""}  {location?.phoneNumber3 ? location?.phoneNumber3 : ""}</h3>
 
               </CardHeader>
-              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Codigo: {clientId}</h3>
-              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase" >Nome: {name} {surname}</h3>
-              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Morada:  {address}</h3>
-              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Contacto: {phoneNumber}</h3>
+              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Codigo: {clientId};</h3>
+              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase" >Nome: {name} {surname};</h3>
+              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Morada:  {address};</h3>
+              <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Contacto: {phoneNumber};</h3>
 
-              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Factura: {orderRef}</h3>
-              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Data: {new Date().toUTCString()}</h3>
+              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Factura: {orderRef};</h3>
+              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Data: {new Date().toUTCString()};</h3>
               <CardBody className="mt-0 bg-white">
                 <Row>
                   <Col>{
@@ -572,6 +573,7 @@ const Order = function () {
                 <h3 className=" text-darker text-center  p-0 m-0">O levantamento das roupas deve ser feito  </h3>
                 <h3 className=" text-darker   text-center p-0 m-0">dentro de 30 dias, fora do prazo estabelecido</h3>
                 <h3 className=" text-darker   text-center p-0 m-0"> não nos responsabilizamos, Obrigado!</h3>
+                <h3 className=" text-darker   text-right text-uppercase p-0 m-3"> Vendedor/a: {auth.name} {auth.surname}</h3>
 
 
               </CardBody>

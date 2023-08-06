@@ -33,6 +33,7 @@ const Invoices = () => {
   const [orders, setOrders] = useState([])
   const accessToken = sessionStorage.getItem('accessToken');
   const location = JSON.parse(sessionStorage.getItem('address'));
+  const auth = JSON.parse(sessionStorage.getItem('auth'));
   const errorRef = useRef();
   const successRef = useRef();
   const date = moment().format('MMMM Do YYYY, h:mm:ss a')
@@ -394,14 +395,14 @@ const Invoices = () => {
               <h3 className="text-darker  p-0 font-weight-bolder m-0" >Tel: {location?.phoneNumber1 ? location?.phoneNumber1 : ""}  {location?.phoneNumber2 ? location?.phoneNumber2 : ""}  {location?.phoneNumber3 ? location?.phoneNumber3 : ""}</h3>
 
             </CardHeader>
-            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Codigo: {order?.clientId}</h3>
-            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase" >Nome: {order?.clientName} {order?.clientSurname}</h3>
-            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Nuit: {order?.clientNuit}</h3>
-            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Morada:  {order?.clientAddress}</h3>
-            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Contacto: {order?.clientPhone}</h3>
+            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Codigo: {order?.clientId};</h3>
+            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase" >Nome: {order?.clientName} {order?.clientSurname};</h3>
+            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Nuit: {order?.clientNuit};</h3>
+            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Morada:  {order?.clientAddress};</h3>
+            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Contacto: {order?.clientPhone};</h3>
 
-              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Recibo: {receiptRef}</h3>
-              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Data: {date}</h3>
+              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Recibo: {receiptRef};</h3>
+              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Data: {date};</h3>
             <CardBody className="mt-0">
               <Row>
                   <Col>{
@@ -476,6 +477,7 @@ const Invoices = () => {
                 <h3 className=" text-darker text-center  p-0 m-0">O levantamento das roupas deve ser feito  </h3>
                 <h3 className=" text-darker   text-center p-0 m-0">dentro de 30 dias, fora do prazo estabelecido</h3>
                 <h3 className=" text-darker   text-center p-0 m-0"> não nos responsabilizamos, Obrigado!</h3>
+                <h3 className=" text-darker   text-right text-uppercase p-0 m-3"> Vendedor/a: {auth.name} {auth.surname}</h3>
 
 </CardBody>
 
