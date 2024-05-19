@@ -24,19 +24,19 @@ const ResetPassword = (props) => {
     const successRef = useRef();
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
-    const [pin, setPin] = useState('');
-    const [pinConfirm, setPinConfirm] = useState('');
+    const [password, setPassword] = useState('');
+    const [PasswordConfirm, setPasswordConfirm] = useState('');
 
     useEffect(() => {
         setError('');
-      }, [pin, pinConfirm])
+      }, [password, PasswordConfirm])
     
       const handleSubmit = async (e) => {
         e.preventDefault();
-    if (pin===pinConfirm){
+    if (password===PasswordConfirm){
         try {
-            const response = await axios.patch("/auth/resetpin",
-              JSON.stringify({  pin }),
+            const response = await axios.patch("/auth/resetPassword",
+              JSON.stringify({  password }),
               {
                   headers: {
                     'accesstoken': `${accessToken}`,
@@ -44,7 +44,7 @@ const ResetPassword = (props) => {
                   },
                 }
             );
-            setPin('')
+            setPassword('')
             setSuccess(response?.data?.message)
           } catch (err) {
             if (!err?.response) {
@@ -57,7 +57,7 @@ const ResetPassword = (props) => {
             errorRef?.current?.focus();
           }
     } else {
-        setError("O pin e o pin de confirmação deve ser iguais")
+        setError("O password e o password de confirmação deve ser iguais")
     }
         
       }
@@ -81,7 +81,7 @@ const ResetPassword = (props) => {
                     <CardBody className="px-5 py-2 h2 mt-4">
                         
                         <div className="text-center text-default  mb-5">
-                            <small> Definir novo pin</small>
+                            <small> Definir novo password</small>
                         </div>
                         <Form role="form">
                             
@@ -93,14 +93,14 @@ const ResetPassword = (props) => {
                                         </InputGroupText>
                                     </InputGroupAddon>
                                     <Input
-                                        placeholder="pin"
+                                        placeholder="password"
                                         type="password"
-                                        id="pin"
+                                        id="password"
                                         required
                                         className="text-default text-uppercase"
-                                        autoComplete="new-pin"
-                                        onChange={(e) => setPin(e.target.value)}
-                                        value={pin}
+                                        autoComplete="new-password"
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        value={password}
                                     />
                                 </InputGroup>
                             </FormGroup>
@@ -112,13 +112,13 @@ const ResetPassword = (props) => {
                                         </InputGroupText>
                                     </InputGroupAddon>
                                     <Input
-                                        placeholder="Confirmar pin"
+                                        placeholder="Confirmar password"
                                         type="password"
                                         className="text-default"
                                         id="passwordMatch"
                                         required
-                                        onChange={(e) => setPinConfirm(e.target.value)}
-                                        value={pinConfirm}
+                                        onChange={(e) => setPasswordConfirm(e.target.value)}
+                                        value={PasswordConfirm}
                                     />
                                 </InputGroup>
                             </FormGroup>

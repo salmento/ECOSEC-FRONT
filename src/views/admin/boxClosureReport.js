@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, } from "react";
 
 
 // reactstrap components
@@ -13,7 +13,7 @@ import {
     CardBody,
     Table,
     Alert,
-    Button
+    Button,
 
 } from "reactstrap";
 
@@ -28,7 +28,7 @@ const Box = () => {
     const accessToken = sessionStorage.getItem('accessToken');
     const location = JSON.parse(sessionStorage.getItem('address'));
     const errorRef = useRef();
-    const componentRef= useRef()
+    const componentRef = useRef()
     const successRef = useRef();
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
@@ -37,21 +37,24 @@ const Box = () => {
     const [totalPayed, setTotalPayed] = useState(0)
     const [totalGenereted, setTotalGenereted] = useState(0)
     const date = moment().format("L")
-
- 
-
+    const [totalMostUsedPaymentMethodMoney, setTotalMostUsedPaymentMethodMoney] = useState({ name: " Dinheiro", totalPayed: 0 })
+    const [totalMostUsedPaymentMethodCheck, setTotalMostUsedPaymentMethodCheck] = useState({ name: "CHEQUE", totalPayed: 0 })
+    const [totalMostUsedPaymentMethodPos, setTotalMostUsedPaymentMethodPos] = useState({ name: "POS", totalPayed: 0 })
+    const [totalMostUsedPaymentMethodMobileCard, setTotalMostUsedPaymentMethodMobileCard] = useState({ name: "Carteira Móvel", totalPayed: 0 })
 
     const handlePrint = () => {
         window.print()
     }
 
-    setTimeout(function () {
-        if(success)
-          setSuccess("")
-        if(error)
-          setError("")  
-    }, 4000);
     
+
+    setTimeout(function () {
+        if (success)
+            setSuccess("")
+        if (error)
+            setError("")
+    }, 4000);
+
     const boxClosure = async () => {
 
         try {
@@ -64,7 +67,8 @@ const Box = () => {
             setOrders(response?.data?.orders)
             setTotalGenereted(response?.data?.totalGenerated)
             setTotalPayed(response?.data?.totalPayed)
-            
+            report()
+
             setError("")
             setSuccess("")
         } catch (err) {
@@ -78,7 +82,34 @@ const Box = () => {
             errorRef?.current?.focus();
         }
     }
-    
+
+    const report = async () => {
+
+        try {
+            const response = await axios.get(`report/dashboard`,
+                {
+                    headers: { 'accesstoken': `${accessToken}` },
+                }
+            );
+            setTotalMostUsedPaymentMethodMoney(response?.data?.totalMostUsedPaymentMethodMoney)
+            setTotalMostUsedPaymentMethodCheck(response?.data?.totalMostUsedPaymentMethodCheck)
+            setTotalMostUsedPaymentMethodPos(response?.data?.totalMostUsedPaymentMethodPos)
+            setTotalMostUsedPaymentMethodMobileCard(response?.data?.totalMostUsedPaymentMethodMobileCard)
+            setError("")
+            setSuccess("")
+
+        } catch (err) {
+            if (!err?.response) {
+                setError('Nenhum servidor responde');
+            } else if (err.response?.status === 404 || 400 || 401 || 500) {
+                setError(err.response?.data?.error);
+            } else {
+                setError('Falha na pesquisa pelos utilizadores, por favor tente novamente');
+            }
+            errorRef?.current?.focus();
+        }
+    }
+
     return (
 
         <>{accessToken ?
@@ -93,8 +124,8 @@ const Box = () => {
                             </Alert> : ""}
                             <Row>
                                 <Col>
-                            <Button className="m0 text-uppercase"  color="danger" to="/admin/reporter" type="button" tag={Link}  >
-            <i className="fas fa-arrow-left"></i>voltar</Button></Col></Row>
+                                    <Button className="m0 text-uppercase" color="danger" to="/admin/reporter" type="button" tag={Link}  >
+                                        <i className="fas fa-arrow-left"></i>voltar</Button></Col></Row>
                             <CardHeader className="text-center border-0 pt-2 pt-md-4 pb-0 pb-md-0">
                                 <h3 className="mb-0 text-default text-uppercase">Fecho do dia </h3>
                             </CardHeader>
@@ -113,7 +144,7 @@ const Box = () => {
                                             )}
                                             content={() => componentRef.current}
                                         />
-                                       
+
                                     </Row>
 
 
@@ -167,42 +198,71 @@ const Box = () => {
                                                         <tr key="10000000000000000000000000" >
                                                             <td className="p-0"><strong>Factura</strong></td>
                                                             <td className="p-0"><strong></strong></td>
-                                                            <td className="p-0"><strong>{parseFloat(totalGenereted).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits:2})}MT</strong></td>
+                                                            <td className="p-0"><strong>{parseFloat(totalGenereted).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}MT</strong></td>
                                                         </tr>
                                                         {orders?.map((order) => (
                                                             <tr key={order?.orderRef} >
                                                                 <td className="p-0">Factura</td>
                                                                 <td className="p-0">{order?.orderRef}</td>
-                                                                <td className="p-0">{parseFloat(order?.totalToPay).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits:2})} MT</td>
+                                                                <td className="p-0">{parseFloat(order?.totalToPay).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
                                                             </tr>
                                                         ))}
                                                         <tr key="10000000000000000000000000111" >
                                                             <td className="p-0"><strong>Recibo</strong></td>
                                                             <td className="p-0"><strong></strong></td>
-                                                            <td className="p-0"><strong>{parseFloat(totalPayed).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits:2})} MT</strong></td>
+                                                            <td className="p-0"><strong>{parseFloat(totalPayed).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</strong></td>
                                                         </tr>
                                                         {receipts?.map((receipt) => (
                                                             <tr key={receipt?.receiptRef} >
                                                                 <td className="p-0">Recibo</td>
                                                                 <td className="p-0">{receipt?.receiptRef}</td>
-                                                                <td className="p-0">{parseFloat(receipt?.totalToPay).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits:2})} MT</td>
+                                                                <td className="p-0">{parseFloat(receipt?.payedMoney).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
                                                             </tr>
                                                         ))}
+
+<tr key="1" >
+                                                            <td className="p-0">
+                                                                
+                                                                {totalMostUsedPaymentMethodMoney?.name}</td><td></td>
+                                                            <td className="p-0">
+                                                            {parseFloat(totalMostUsedPaymentMethodMoney?.totalPayed).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
+                                                            
+                                                        </tr>
+                                                        <tr key="2" >
+                                                            <td className="p-0">{totalMostUsedPaymentMethodPos?.name}</td>
+                                                            <td></td>
+                                                            <td className="p-0">
+                                                            {parseFloat(totalMostUsedPaymentMethodPos?.totalPayed).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT
+                                                            </td>
+                                                           
+                                                        </tr>
+                                                        <tr key="3" >
+                                                            <td className="p-0">{totalMostUsedPaymentMethodMobileCard?.name}</td>
+                                                            <td></td>
+                                                            <td className="p-0">
+                                                            {parseFloat(totalMostUsedPaymentMethodMobileCard?.totalPayed).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
+                                                            
+                                                        </tr>
+                                                        <tr key="4" >
+                                                            <td className="p-0">{totalMostUsedPaymentMethodCheck?.name}</td>
+                                                            <td></td>
+                                                            <td className="p-0">
+                                                            {parseFloat(totalMostUsedPaymentMethodCheck?.totalPayed).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
+                                                            
+                                                        </tr>
 
                                                     </tbody>
 
                                                 </Table>
+                                                
                                             </Col>
-
                                         </Row>
                                     </div>
-
-
                                 </Form>
                             </CardBody>
                         </Card>
                     </Col>
-                                    </Row>
+                </Row>
 
             </Container> : <Redirect from="*" to="/auth/login" />
 

@@ -20,6 +20,9 @@ import address from "views/admin/address.js";
 import Receipt from "views/admin/receipt.js";
 import Quotation from "views/admin/quotation";
 import QuotationView from "views/admin/viewQuotation";
+import Top10Clients from "views/admin/top10Clients";
+import BankStatement from "views/admin/bankStatement";
+
 var routes = [
   {
     path: "/clients",
@@ -57,6 +60,12 @@ var routes = [
     component: EditUsers,
     layout: "/admin",
     invisible: true,
+  }, {
+    path: "/bankStatement",
+    name: "Extracto",
+    icon: "fas fa-user-friends text-white",
+    component: BankStatement,
+    layout: "/admin",
   },
   {
     path: "/order",
@@ -177,6 +186,13 @@ var routes = [
     name: "Segunda Via",
     icon: "fas fa-file-invoice text-white",
     component: Invoices,
+    layout: "/admin",
+  },
+  {
+    path: "/top10clients",
+    name: "Clientes Top 10",
+    icon: "fas fa-file-invoice text-white",
+    component: Top10Clients,
     layout: "/admin",
   },
   

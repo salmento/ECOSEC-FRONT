@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Redirect, Link } from "react-router-dom";
-
+import html2pdf from "html2pdf.js";
 
 // reactstrap components
 import {
@@ -37,7 +37,7 @@ const Invoices = () => {
   const errorRef = useRef();
   const successRef = useRef();
   const date = moment().format('MMMM Do YYYY, h:mm:ss a')
-  const printRef=useRef()
+  const printRef = useRef()
 
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
@@ -56,6 +56,8 @@ const Invoices = () => {
   const [clientId, setClientId] = useState(0)
   const [observation, setObservation] = useState("")
   const [isPrint, setIsPrint] = useState(false)
+  const [discount, setDiscount] = useState(0)
+  const [count, setCount] = useState(0)
 
   useEffect(() => {
     setPaymentMissing(total >= payedMoney ? parseFloat(parseFloat(total) - parseFloat(payedMoney)).toFixed(2) : parseFloat(paymentMissing).toFixed(2))
@@ -84,15 +86,16 @@ const Invoices = () => {
           );
           setOrder(response?.data)
           const ref = response?.data?.orderRef.substring(2, response?.data?.orderRef?.length)
-          let finalRef = `RE${ref}`
-          if (response?.data?.receiptRef) finalRef = `RE${ref}_2`
-          
+
+          const finalRef = "RE".concat(ref, "_", count + 1)
+
           setReceiptRef(finalRef)
           setTotal(response?.data?.paymentMissing)
           setOrders(JSON.parse(response?.data?.order))
           setPayedMoney(0)
           setPaymentMissing(response?.data?.paymentMissing)
           setPaymentStatus(response?.data?.paymentStatus)
+          setDiscount(response?.data?.discount)
           setPayChange(0)
           setClientId(response?.data?.clientId)
           setError("")
@@ -118,9 +121,35 @@ const Invoices = () => {
     }
 
 
-  }, [accessToken, errorRef, orderRef,]
+  }, [accessToken, errorRef, orderRef, count]
   )
+  
+  useEffect(() => {
+    const count = async () => {
 
+      try {
+        const response = await axios.get(`receipt/count`,
+          {
+            headers: { 'accesstoken': `${accessToken}` },
+          }
+        );
+        setCount(response?.data)
+        setError("")
+        setSuccess("")
+      } catch (err) {
+        if (!err?.response) {
+          setError('Nenhum servidor responde');
+        } else if (err.response?.status === 404 || 400 || 401 || 500) {
+          setError(err.response?.data?.error);
+        } else {
+          setError('Falha na contagem das requisiçoes, por favor tente novamente');
+        }
+        errorRef?.current?.focus();
+      }
+    }
+    count()
+  }, [accessToken, errorRef]
+  )
 
   useEffect(() => {
     setError("")
@@ -128,8 +157,8 @@ const Invoices = () => {
   }, [observation, orderRef])
 
   const handlePayment = async (event) => {
-    setIsPrint(true)
-    event.preventDefault()
+     setIsPrint(true)
+    event?.preventDefault()
     if (payedMoney) {
 
       try {
@@ -146,8 +175,8 @@ const Invoices = () => {
           }
         );
 
-       
-        handlePrinter()
+
+        event ? handlePrinter() : setIsPrint(false)
         setIsPrint(false)
         setError("")
         setSuccess(response?.data?.message)
@@ -165,7 +194,7 @@ const Invoices = () => {
         errorRef?.current?.focus();
       }
     } else {
-      setError(" Preencher todos os campos obrigatórios")
+      setError(" Insira o valor a pagar")
     }
 
   }
@@ -196,16 +225,39 @@ const Invoices = () => {
   });
 
   const handlePrinter = () => {
-    if (clientId !== 1 && orders.length > 0) {
+    if (payedMoney) {
       setIsPrint(true)
       Printer()
       setClientId(1)
       setOrders([])
       setIsPrint(false)
     } else {
-      setError("Selecione o cliente e pelos um item da requisicao")
+      setError("Insira o valor a pagar")
     }
 
+  }
+
+  const options = {
+    filename: receiptRef,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' },
+  };
+
+
+  const convertToPdf = () => {
+    if (payedMoney) {
+      const content = printRef.current;
+      handlePayment()
+      html2pdf().set(options).from(content).save();
+    } else {
+      setError("Insira o valor a pagar")
+    }
+
+  };
+
+  const handleReset = () => {
+    window.location.reload()
   }
 
 
@@ -248,6 +300,11 @@ const Invoices = () => {
 
 
 
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Button onClick={handleReset} block className="mt-4 p-3 btn btn-warning">Facturar Outro Cliente</Button>
                     </FormGroup>
                   </Col>
 
@@ -308,7 +365,8 @@ const Invoices = () => {
                         value={payedMoney}
                         disabled={receiptRef ? false : true}
                         className="text-uppercase text-default"
-                        onChange={(e) => setPayedMoney(Math.abs(e.target.value))}
+                        onChange={(e) => setPayedMoney(e.target.value)}
+                        min={1}
                       />
                     </FormGroup>
                   </Col>
@@ -326,9 +384,11 @@ const Invoices = () => {
                       />
                     </FormGroup>
                   </Col>
-                  <Col >
+                  <Col md="12" >
                     <FormGroup>
-                      <Button onClick={handlePayment} className="btn-success mt-4"  >Efectuar o pagamento</Button>
+                      <Button block onClick={(e)=>handlePayment(e)} className="btn-success "  >Imprimir o Recibo </Button>
+                      <Button onClick={convertToPdf} className="btn-success" block>Download do Recibo</Button>
+
                     </FormGroup>
                   </Col>
 
@@ -359,18 +419,19 @@ const Invoices = () => {
                         <Input id="payedMoney"
                           placeholder="8000"
                           type="number"
-                          min={1}
                           value={payedMoney}
+                          min={1}
                           disabled={receiptRef ? false : true}
                           onInvalid={e => e.target.setCustomValidity("Por favor, preencha com valor numericos")}
                           className="text-uppercase text-default"
-                          onChange={(e) => setPayedMoney(Math.abs(e.target.value))}
+                          onChange={(e) => setPayedMoney(e.target.value)}
                         />
                       </FormGroup>
                     </Col>
                     <Col >
                       <FormGroup>
-                        <Button onClick={handlePayment} className="btn-success mt-4" >Salvar pagamento</Button>
+                        <Button block onClick={(e)=>handlePayment(e)} className="btn-success "  >Imprimir o Recibo </Button>
+                        <Button onClick={convertToPdf} className="btn-success" block>Download do Recibo</Button>
                       </FormGroup>
                     </Col>
 
@@ -385,26 +446,26 @@ const Invoices = () => {
         <Col className="order-xl-1 text-darker" xl="6" id="print">
           <div className="" ref={printRef}>
             <style type="text/css" media="print">{"@page {size: portrait;}"}</style>
-          <Card className={isPrint ? "  " : " mt-7" }>
-            <CardHeader className=" border-0 text-center text-uppercase">
+            <Card className={isPrint ? "  " : " mt-7"}>
+              <CardHeader className=" border-0 text-center text-uppercase">
 
-              <h3 className="text-darker  p- font-weight-bolder m-0" >ECOSEC Lavandaria</h3>
-              <h3 className="text-darker  p-0 font-weight-bolder m-0" >Nuit: {location?.nuit}</h3>
-              <h3 className="text-darker  p-0 font-weight-bolder m-0" > {location?.name}</h3>
-              <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location?.location}</h3>
-              <h3 className="text-darker  p-0 font-weight-bolder m-0" >Tel: {location?.phoneNumber1 ? location?.phoneNumber1 : ""}  {location?.phoneNumber2 ? location?.phoneNumber2 : ""}  {location?.phoneNumber3 ? location?.phoneNumber3 : ""}</h3>
+                <h3 className="text-darker  p- font-weight-bolder m-0" >LAVANDARIA ECOSEC</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >Nuit: {location?.nuit}</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" > {location?.name}</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location?.location}</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >Tel: {location?.phoneNumber1 ? location?.phoneNumber1 : ""}  {location?.phoneNumber2 ? location?.phoneNumber2 : ""}  {location?.phoneNumber3 ? location?.phoneNumber3 : ""}</h3>
 
-            </CardHeader>
-            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Codigo: {order?.clientId};</h3>
-            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase" >Nome: {order?.clientName} {order?.clientSurname};</h3>
-            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Nuit: {order?.clientNuit};</h3>
-            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Morada:  {order?.clientAddress};</h3>
-            <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Contacto: {order?.clientPhone};</h3>
-
+              </CardHeader>
+              <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Codigo: {order?.clientId};</h3>
+              <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase" >Nome: {order?.clientName} {order?.clientSurname};</h3>
+              <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Nuit: {order?.clientNuit};</h3>
+              <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Morada:  {order?.clientAddress};</h3>
+              <h3 className="text-darker  pl-4 font-weight-bolder m-0 text-uppercase">Contacto: {order?.clientPhone};</h3>
+              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Guia de Entrega: {order?.deliveryGuide};</h3>
               <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Recibo: {receiptRef};</h3>
               <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Data: {date};</h3>
-            <CardBody className="mt-0">
-              <Row>
+              <CardBody className="mt-0">
+                <Row>
                   <Col>{
                     isPrint ? <Col className="p-0">
 
@@ -428,60 +489,61 @@ const Invoices = () => {
 
                       :
 
-                  <Table
-                    className="align-items-center "
-                    responsive
-                    bordered
-                  >
-                    
-                    <thead className="text-darker">
-                      <tr >
-                        <th scope="col" className="font-weight-bolder p-1">Qt</th>
-                        <th scope="col" className="font-weight-bolder p-1">Descrição</th>
-                        <th scope="col" className="font-weight-bolder p-1">P.Unidade</th>
-                        <th scope="col" className="font-weight-bolder p-1">Subtotal</th>
-                        <th scope="col" className="font-weight-bolder p-1">Comentario</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-darker p-0">
-                      {orders?.map((order, index) => (
-                        <tr key={index} value={order}>
-                          <td className="p-1 font-weight-bolder text-uppercase">{order?.quantity}</td>
-                          <td className="p-1 font-weight-bolder text-uppercase">{order?.family}</td>
-                          <td className="p-1 font-weight-bolder text-uppercase">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                          <td className="p-1 font-weight-bolder text-uppercase">{parseFloat((parseFloat(order?.prince) * 0.16 + parseFloat(order?.prince)) * order?.quantity).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                          <td className="p-1 font-weight-bolder text-uppercase">{order?.observation}</td>
+                      <Table
+                        className="align-items-center "
+                        responsive
+                        bordered
+                      >
 
-                        </tr>
-                      ))}
+                        <thead className="text-darker">
+                          <tr >
+                            <th scope="col" className="font-weight-bolder p-1">Qt</th>
+                            <th scope="col" className="font-weight-bolder p-1">Descrição</th>
+                            <th scope="col" className="font-weight-bolder p-1">P.Unidade</th>
+                            <th scope="col" className="font-weight-bolder p-1">Subtotal</th>
+                            <th scope="col" className="font-weight-bolder p-1">Comentario</th>
+                          </tr>
+                        </thead>
+                        <tbody className="text-darker p-0">
+                          {orders?.map((order, index) => (
+                            <tr key={index} value={order}>
+                              <td className="p-1 font-weight-bolder text-uppercase">{order?.quantity}</td>
+                              <td className="p-1 font-weight-bolder text-uppercase">{order?.family}</td>
+                              <td className="p-1 font-weight-bolder text-uppercase">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
+                              <td className="p-1 font-weight-bolder text-uppercase">{parseFloat((parseFloat(order?.prince) * 0.16 + parseFloat(order?.prince)) * order?.quantity).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
+                              <td className="p-1 font-weight-bolder text-uppercase">{order?.observation}</td>
 
-                    </tbody>
-                  </Table>
-}
-                </Col>
+                            </tr>
+                          ))}
+
+                        </tbody>
+                      </Table>
+                  }
+                  </Col>
 
 
-              </Row>
+                </Row>
 
-                <h3 className="text-darker  p-0 font-weight-bolder m-0" >Total a pagar: {total} MT</h3>
-                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Valor pago: {payedMoney} MT</h3>
-                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Valor por pagar: {parseFloat(paymentMissing).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >Total a pagar: {total}.00MT</h3>
+                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Valor pago: {payedMoney}.00MT</h3>
+                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Valor por pagar: {paymentMissing} MT</h3>
+                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Percentagem do desconto: {discount} %</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Troncos: {payChange} MT</h3>
-              <hr style={{
-                width: "98%",
-                marginLeft: 0,
-                borderColor: "info"
-              }} />
-              <h3 className="m-0  p-0 pb-2 pr-2 ">Comentários: {observation}</h3>
-              
+                <hr style={{
+                  width: "98%",
+                  marginLeft: 0,
+                  borderColor: "info"
+                }} />
+                <h3 className="m-0  p-0 pb-2 pr-2 ">Comentários: {observation}</h3>
+
                 <h3 className=" text-darker text-center  p-0 m-0">O levantamento das roupas deve ser feito  </h3>
                 <h3 className=" text-darker   text-center p-0 m-0">dentro de 30 dias, fora do prazo estabelecido</h3>
                 <h3 className=" text-darker   text-center p-0 m-0"> não nos responsabilizamos, Obrigado!</h3>
                 <h3 className=" text-darker   text-right text-uppercase p-0 m-3"> Vendedor/a: {auth.name} {auth.surname}</h3>
 
-</CardBody>
+              </CardBody>
 
-          </Card>
+            </Card>
           </div>
         </Col>
 

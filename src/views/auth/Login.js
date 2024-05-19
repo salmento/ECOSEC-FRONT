@@ -22,11 +22,9 @@ import axios from '../../api/axios';
 
 
 const Login = () => {
-  const usernameRef = useRef();
   const errorRef = useRef();
-
   const [username, setUsername] = useState('');
-  const [pin, setPin] = useState('');
+  const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -45,20 +43,17 @@ const Login = () => {
     handleSelectaddress()
   }, [index, addresses])
 
-  useEffect(() => {
-    usernameRef.current.focus();
-  }, [])
 
   useEffect(() => {
     setError('');
-  }, [username, pin])
+  }, [username, password])
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
 
     try {
       const response = await axios.post("/auth/signin",
-        JSON.stringify({ username, pin }),
+        JSON.stringify({ username, password }),
         {
           headers: { 'Content-Type': 'application/json' },
         }
@@ -71,7 +66,7 @@ const Login = () => {
       sessionStorage.setItem("auth", JSON.stringify(user))
       sessionStorage.setItem("accessToken", accessToken)
       setUsername('');
-      setPin('');
+      setPassword('');
       setSuccess(true)
     } catch (err) {
       if (!err?.response) {
@@ -119,6 +114,12 @@ const Login = () => {
       setError("")  
 }, 4000);
 
+const handleOnKeyDown = (event) => {
+  if(event.key==='Enter')
+    handleSubmit()
+    
+}
+
   return (
     <>{success ? (
       role === roleConfig.admin ?
@@ -153,7 +154,6 @@ const Login = () => {
                   autoComplete="new-username"
                   className="text-default text-uppercase"
                   required
-                  ref={usernameRef}
                   onChange={(e) => setUsername(e.target.value)}
                   value={username}
                 />
@@ -167,14 +167,15 @@ const Login = () => {
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
-                  placeholder="pin"
+                  placeholder="password"
                   type="password"
-                  id="pin"
+                  id="password"
                   required
                   className="text-default text-uppercase"
-                  autoComplete="new-pin"
-                  onChange={(e) => setPin(e.target.value)}
-                  value={pin}
+                  autoComplete="new-password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleOnKeyDown}
+                  value={password}
                 />
               </InputGroup>
               <select id="family"

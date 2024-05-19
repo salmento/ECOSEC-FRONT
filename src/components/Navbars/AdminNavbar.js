@@ -63,7 +63,7 @@ const AdminNavbar = () => {
                 </DropdownItem>
                 <DropdownItem className="text-default" to="/auth/resetpassword"  tag={Link} onClick={logout}>
                   <i className="ni ni-user-run" />
-                  <span>Trocar pin</span>
+                  <span>Trocar Password</span>
                 </DropdownItem>
                 <DropdownItem className="text-default" to="/auth/login"  tag={Link} onClick={logout}>
                   <i className="ni ni-user-run" />

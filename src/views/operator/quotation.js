@@ -497,7 +497,7 @@ const Order = function () {
             <Card className={isPrint ? "" : " mt-7 "} >
               <CardHeader className=" border-0 text-center  ">
 
-                <h3 className="text-darker  p-0 font-weight-bolder m-0" >ECOSEC Lavandaria</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >LAVANDARIA ECOSEC</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Nuit: {location?.nuit}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location?.name}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location?.location}</h3>

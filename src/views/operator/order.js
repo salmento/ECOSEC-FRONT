@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import html2pdf from "html2pdf.js";
 
 
 // reactstrap components
@@ -48,7 +49,7 @@ const Order = function () {
   const [paymentMissing, setPaymentMissing] = useState(0)
   const [orders, setOrders] = useState([])
   const [quantity, setQuantity] = useState(0)
-  const [family, setFamily] = useState(1000000)
+  const [family, setFamily] = useState("")
   const [prince, setPrince] = useState(0)
   const [orderRef, setOrderRef] = useState()
   const [count, setCount] = useState(0)
@@ -57,7 +58,11 @@ const Order = function () {
   const [observation, setObservation] = useState("")
   const [isPrint, setIsPrint] = useState(false)
   const [urgent, setUrgent] = useState("")
-
+  const [dontPrint, setDontPrint] = useState(false)
+  const [discount, setDiscount] = useState(0)
+  const [totalDiscount, setTotalDiscount] = useState(0)
+  const [deliveryGuide, setDeliveryGuide] = useState("")
+  const [isPerKilo, setIsPerKilo] = useState(false)
 
   const removeOrder = (order) => {
     const removedOrder = orders.filter((prevOrder) => prevOrder !== order)
@@ -65,10 +70,13 @@ const Order = function () {
     removedOrder.forEach(order => {
       total += order.subTotal
     })
-
     setTotal(total)
     setOrders(removedOrder);
   };
+
+  const handleCheckBox = () => {
+    isPerKilo ? setIsPerKilo(false) : setIsPerKilo(true)
+  }
 
   const addOrder = (order) => {
     if (parseInt(quantity) !== 0 && parseInt(prince) !== 0) {
@@ -83,7 +91,6 @@ const Order = function () {
       addedOrder.forEach(order => {
         total += order.subTotal
       })
-
       setTotal(total)
 
       setOrders(addedOrder);
@@ -126,7 +133,9 @@ const Order = function () {
     handleSelectArticle()
   }, [index, articles])
 
-
+  useEffect(() => {
+    setTotalDiscount(total - total * discount / 100)
+  }, [discount, total])
   useEffect(() => {
     const handleSelectClient = () => {
       const client = clients.find(client => {
@@ -161,7 +170,7 @@ const Order = function () {
         } else {
           setError('Falha na pesquisa pelos utilizadores, por favor tente novamente');
         }
-        errorRef?.current.focus();
+        errorRef?.current?.focus();
       }
     }
     client()
@@ -188,7 +197,7 @@ const Order = function () {
         } else {
           setError('Falha na contagem das requisiçoes, por favor tente novamente');
         }
-        errorRef?.current.focus();
+        errorRef?.current?.focus();
       }
     }
     count()
@@ -224,13 +233,12 @@ const Order = function () {
 
 
   const handleCreate = async (event) => {
-    setIsPrint(true)
-    event.preventDefault()
+    event ? setIsPrint(true) : setDontPrint(true);
     if (client && orders) {
       try {
         const response = await axios.post(`order/create`,
           JSON.stringify({
-            client, order: orders, paymentStatus, observation, location: location.id, orderRef, paymentMissing, payedMoney, totalToPay: total
+            client, order: orders, paymentStatus, observation, location: location.id, orderRef, paymentMissing, payedMoney, totalToPay: totalDiscount, discount, deliveryGuide
 
           }),
           {
@@ -240,7 +248,7 @@ const Order = function () {
             },
           }
         );
-        handlePrinter()
+        event ? handlePrinter() : setDontPrint(false)
         setError("")
         setSuccess(response?.data?.message)
         setCount(count + 1)
@@ -316,6 +324,25 @@ const Order = function () {
 
   }
 
+  const options = {
+    filename: orderRef,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' },
+  };
+
+
+  const convertToPdf = async (event) => {
+
+    if (clientId !== 1 && orders.length > 0) {
+      const content = printRef.current;
+      await handleCreate()
+      html2pdf().set(options).from(content).save();
+    } else {
+      setError("Selecione o cliente e pelos um item da requisicao")
+    }
+  };
+
   return (
 
     <>{accessToken ? (<Container fluid>
@@ -334,10 +361,10 @@ const Order = function () {
                 <Button className="m0 text-uppercase" color="danger" to="/operator/clients" type="button" tag={Link}  >
                   <i className="fas fa-arrow-left"></i>voltar</Button></Col></Row>
             <CardHeader className="text-center border-0 pt-2 pt-md-4 pb-0 pb-md-0">
-              <h3 className="mb-0 text-default">Facturação e Cotação</h3>
+              <h3 className="mb-0 text-default">Facturação o</h3>
             </CardHeader>
             <CardBody>
-              <Form className="pl-4 font-weight-bold text-uppercase">
+              <Form className="pl-4 font-weight-bold text-uppercase" id="orders">
 
                 <Row >
                   <Col md="6">
@@ -347,8 +374,8 @@ const Order = function () {
                   </Col>
                   <Col md="6">
                     <FormGroup>
-                      <label className="text-default" htmlFor="studentNumber" >Selecione Cliente</label>
-                      <Input id="studentNumber"
+                      <label className="text-default" htmlFor="client" >Selecione Cliente</label>
+                      <Input id="client"
                         placeholder="Salmento Chitlango"
                         type="text"
                         autoComplete="new-client"
@@ -366,7 +393,47 @@ const Order = function () {
 
                     </FormGroup>
                   </Col>
+                  <Col md="4" >
+                    <FormGroup className="mb-4">
 
+                      <label className="text-default form-control-label" htmlFor="discount">Inserir a Percentagem desconto </label>
+                      <Input id="discount"
+                        placeholder="0"
+                        type="number"
+                        disabled={name ? false : true}
+                        className="text-default"
+                        value={discount}
+                        onChange={(e) => setDiscount(e.target.value)}
+                        min={0}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="4" >
+                    <FormGroup className="mb-4">
+
+                      <label className="text-default form-control-label" htmlFor="deliveryGuide">Referencia da Guia </label>
+                      <Input id="deliveryGuide" 
+                        placeholder="DG10001"
+                        type="text"
+                        className="text-default"
+                        value={deliveryGuide}
+                        onChange={(e) => setDeliveryGuide(e.target.value)}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="4" >
+                    <FormGroup className="mb-4 ">
+                      <h2 className="text-default"> Facturar por Kilo </h2>
+                      <label className="custom-toggle" htmlFor="perKilo">
+                        <input
+                         id="perKilo"
+                          type="checkbox"
+                          onChange={handleCheckBox}
+                        />
+                        <span className="custom-toggle-slider rounded-circle" />
+                      </label>
+                    </FormGroup>
+                  </Col>
                 </Row>
                 <hr style={{
                   width: "98%",
@@ -396,26 +463,40 @@ const Order = function () {
                       />
                     </FormGroup>
                   </Col>
-                  <Col md="4" >
+                  {isPerKilo ? <Col md="4" >
                     <FormGroup className="mb-4">
 
-                      <label className="text-default form-control-label " htmlFor="family">  Selecione o artigo:
-                        <select id="family"
-                          className="text-default border-0 form-control border-dark font-weight-bold text-uppercase select mt-2"
-                          defaultValue={index}
-                          disabled={clientId ? false : true}
-                          onChange={(e) => setIndex(e.target.value)}
-                          required>
-                          <option key="1000000" value={1000000} disabled>  Clique aqui </option>
-                          {articles?.map((article, index) => (
-                            <option key={index} value={index}>  {article?.name} </option>
-                          ))}
-                        </select>
-                      </label>
-
-
+                      <label className="text-default form-control-label" htmlFor="article">Descrever o artigo: </label>
+                      <Input id="article"
+                        placeholder="Uniformes"
+                        type="text"
+                        min={1}
+                        value={family}
+                        className="text-uppercase text-default"
+                        onChange={(e) => setFamily(e.target.value)}
+                      />
                     </FormGroup>
-                  </Col>
+                  </Col> :
+                    <Col md="4" >
+                      <FormGroup className="mb-4">
+
+                        <label className="text-default form-control-label " htmlFor="family">  Selecione o artigo:
+                          <select id="family"
+                            className="text-default border-0 form-control border-dark font-weight-bold text-uppercase select mt-2"
+                            defaultValue={index}
+                            disabled={clientId ? false : true}
+                            onChange={(e) => setIndex(e.target.value)}
+                            required>
+                            <option key="1000000" value={1000000} disabled>  Clique aqui </option>
+                            {articles?.map((article, index) => (
+                              <option key={index} value={index}>  {article?.name} </option>
+                            ))}
+                          </select>
+                        </label>
+
+
+                      </FormGroup>
+                    </Col>}
                   <Col md="4" >
                     <FormGroup className="mb-4">
 
@@ -425,7 +506,7 @@ const Order = function () {
                         type="number"
                         min={1}
                         value={prince}
-                        disabled={urgent === "urgencia" ? false : true}
+                        disabled={urgent === "urgencia" ? false : isPerKilo ? false : true}
                         className="text-uppercase text-default"
                         onChange={(e) => setPrince(e.target.value)}
                       />
@@ -435,7 +516,7 @@ const Order = function () {
                   <Col md="4" >
                     <FormGroup className="mb-4">
 
-                      <label className="text-default form-control-label" htmlFor="obsertvation">Comentario: </label>
+                      <label className="text-default form-control-label" htmlFor="observation">Comentario: </label>
                       <Input id="observation"
                         placeholder="Camisa com noda"
                         type="text"
@@ -467,7 +548,9 @@ const Order = function () {
                 <Row>
                   <Col >
                     <FormGroup>
-                      <Button onClick={handleCreate} className="btn-success" block>Gerar factura</Button>
+                      <Button onClick={handleCreate} className="btn-success" block>Imprimir Factura</Button>
+                      <Button onClick={convertToPdf}
+                        className="btn-success" block>Donwload da Factura</Button>
 
                     </FormGroup>
                   </Col>
@@ -482,13 +565,13 @@ const Order = function () {
           </Card>
         </Col>
 
-        <Col className="order-xl-1 text-darker" xl="6" id="print">
+        <Col className="order-xl-1 text-darker" xl="6" id="print" >
           <div className="" ref={printRef}>
             <style type="text/css" media="print">{"@page {size: portrait;}"}</style>
             <Card className={isPrint ? "" : "mt-7"} >
               <CardHeader className="bg-white border-0 text-center text-uppercase">
 
-                <h3 className="text-darker  p-0 font-weight-bolder m-0" >ECOSEC Lavandaria</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >LAVANDARIA ECOSEC</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Nuit: {location?.nuit}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location?.name}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location?.location}</h3>
@@ -501,6 +584,7 @@ const Order = function () {
               <h3 className="m-0  text-darker pl-4 font-weight-bolder text-uppercase">Contacto: {phoneNumber};</h3>
 
               <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Factura: {orderRef};</h3>
+              <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Guia de Entrega: {deliveryGuide};</h3>
               <h3 className="m-0  p-0   pl-4 text-darker font-weight-bolder text-uppercase">Data: {new Date().toUTCString()};</h3>
               <CardBody className="mt-0 bg-white">
                 <Row>
@@ -531,13 +615,13 @@ const Order = function () {
                       >
                         <thead className="">
                           <tr >
-                            <th scope="col" className="text-darker p-1 text-uppercase">Qt</th>
-                            <th scope="col" className="text-darker p-1 text-uppercase">Descrição</th>
-                            <th scope="col" className="text-darker p-1 text-uppercase">P.Unidade</th>
-                            <th scope="col" className="text-darker p-1 text-uppercase">Subtotal</th>
-                            <th scope="col" className="text-darker p-1 text-uppercase">Comentario</th>
-                            <th scope="col" className="text-darker p-1 text-uppercase">Acção</th>
-                            <th scope="col" className="text-darker p-1 text-uppercase" />
+                            <th scope="col" className="text-darker p-1 ">QT</th>
+                            <th scope="col" className="text-darker p-1 ">DESCRICAO</th>
+                            <th scope="col" className="text-darker p-1 e">P.UNIDADE</th>
+                            <th scope="col" className="text-darker p-1 e">SUBTOTAL</th>
+                            <th scope="col" className="text-darker p-1 e">COMENTARIOS</th>
+                            {dontPrint ? "" : <th scope="col" className="text-darker p-1 ">ACCAO</th>}
+                            <th scope="col" className="text-darker p-1 e" />
                           </tr>
                         </thead>
                         <tbody className=" p-0 text-darker  ">
@@ -547,11 +631,11 @@ const Order = function () {
                               <td className="p-1 font-weight-bolder text-uppercase">{order?.family}</td>
                               <td className="p-1 font-weight-bolder text-uppercase">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
                               <td className="p-1 font-weight-bolder text-uppercase">{parseFloat(order?.subTotal).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
-                              <td className="p-1 font-weight-bolder text-uppercase" text-uppercase>{order?.observation}</td>
-                              <td className="p-1 font-weight-bolder text-uppercase"><button value={order} className="btn btn-warning p-1" onClick={(e) => {
+                              <td className="p-1 font-weight-bolder text-uppercase">{order?.observation}</td>
+                              {dontPrint ? "" : <td className="p-1 font-weight-bolder text-uppercase"><button value={order} className="btn btn-warning p-1" onClick={(e) => {
                                 e.preventDefault();
                                 removeOrder(order)
-                              }} ><i className="ni ni-fat-delete"></i> Remover</button></td>
+                              }} ><i className="ni ni-fat-delete"></i> Remover</button></td>}
 
                             </tr>
                           ))}
@@ -563,7 +647,9 @@ const Order = function () {
 
                 </Row>
 
-                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Total a pagar: {parseFloat(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3>
+                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Total sem desconto a pagar: {parseFloat(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3>
+                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Desconto {parseFloat(discount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</h3>
+                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Total com desconto a pagar: {parseFloat(totalDiscount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >IVA: 16 %</h3>
                 <hr style={{
                   width: "98%",

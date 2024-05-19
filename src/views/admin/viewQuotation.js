@@ -261,7 +261,7 @@ const Quotations = () => {
             <Card className={isPrint ? "" : "mt-7"}>
               <CardHeader className=" border-0 text-center text-uppercase">
 
-                <h3 className="text-darker  p-0 font-weight-bolder m-0" >ECOSEC Lavandaria</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >LAVANDARIA ECOSEC</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Nuit: {location.nuit}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location.name}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Tel: {location?.phoneNumber1 ? location.phoneNumber1 : ""}  {location?.phoneNumber2 ? location.phoneNumber2 : ""}  {location?.phoneNumber3 ? location.phoneNumber3 : ""} </h3>

@@ -12,8 +12,7 @@ import {
     CardTitle,
     Alert,
     Table,
-    Progress,
-    Form
+    Progress
 } from "reactstrap";
 
 import moment from "moment";
@@ -45,18 +44,8 @@ const Clients = () => {
     const [mobileCardPercentagem, setMobileCardPercentagem] = useState(0)
     const [posPercentagem, setPosPercentagem] = useState(0)
     const [checkPercentagem, setCheckPercentagem] = useState(0)
-    const [tirolTotalMostUsedPaymentMethodMoney, setTirolTotalMostUsedPaymentMethodMoney] = useState({ name: " Dinheiro", totalPayed: 0 })
-    const [tirolTotalMostUsedPaymentMethodCheck, setTirolTotalMostUsedPaymentMethodCheck] = useState({ name: "CHEQUE", totalPayed: 0 })
-    const [tirolTotalMostUsedPaymentMethodPos, setTirolTotalMostUsedPaymentMethodPos] = useState({ name: "POS", totalPayed: 0 })
-    const [tirolTotalMostUsedPaymentMethodMobileCard, setTirolTotalMostUsedPaymentMethodMobileCard] = useState({ name: "Carteira Móvel", totalPayed: 0 })
-    const [vilaTotalMostUsedPaymentMethodMoney, setVilaTotalMostUsedPaymentMethodMoney] = useState({ name: " Dinheiro", totalPayed: 0 })
-    const [vilaTotalMostUsedPaymentMethodCheck, setVilaTotalMostUsedPaymentMethodCheck] = useState({ name: "CHEQUE", totalPayed: 0 })
-    const [vilaTotalMostUsedPaymentMethodPos, setVilaTotalMostUsedPaymentMethodPos] = useState({ name: "POS", totalPayed: 0 })
-    const [vilaTotalMostUsedPaymentMethodMobileCard, setVilaTotalMostUsedPaymentMethodMobileCard] = useState({ name: "Carteira Móvel", totalPayed: 0 })
-    const [interfrancaTotalMostUsedPaymentMethodMoney, setInterfrancaTotalMostUsedPaymentMethodMoney] = useState({ name: " Dinheiro", totalPayed: 0 })
-    const [interfrancaTotalMostUsedPaymentMethodCheck, setInterfrancaTotalMostUsedPaymentMethodCheck] = useState({ name: "CHEQUE", totalPayed: 0 })
-    const [interfrancaTotalMostUsedPaymentMethodPos, setInterfrancaTotalMostUsedPaymentMethodPos] = useState({ name: "POS", totalPayed: 0 })
-    const [interfrancaTotalMostUsedPaymentMethodMobileCard, setInterfrancaTotalMostUsedPaymentMethodMobileCard] = useState({ name: "Carteira Móvel", totalPayed: 0 })
+    
+   
 
     setTimeout(function () {
         window.location.reload();
@@ -109,86 +98,8 @@ const Clients = () => {
                 errorRef?.current?.focus();
             }
         }
-        const tirol = async () => {
-
-            try {
-                const response = await axios.get(`receipt/boxClosurePaymentMethodByLocation?addressId=21`,
-                    {
-                        headers: { 'accesstoken': `${accessToken}` },
-                    }
-                );
-                setTirolTotalMostUsedPaymentMethodCheck(response?.data?.totalMostUsedPaymentMethodCheck)
-                setTirolTotalMostUsedPaymentMethodMobileCard(response?.data?.totalMostUsedPaymentMethodMobileCard)
-                setTirolTotalMostUsedPaymentMethodMoney(response?.data?.totalMostUsedPaymentMethodMoney)
-                setTirolTotalMostUsedPaymentMethodPos(response?.data?.totalMostUsedPaymentMethodPos)
-                setError("")
-                setSuccess("")
-            } catch (err) {
-                if (!err?.response) {
-                    setError('Nenhum servidor responde');
-                } else if (err.response?.status === 404 || 400 || 401 || 500) {
-                    setError(err.response?.data?.error);
-                } else {
-                    setError('Falha na pesquisa pelas facturas pendentes, port favor faça refresh');
-                }
-                errorRef?.current?.focus();
-            }
-        }
-        const vila = async () => {
-
-            try {
-                const response = await axios.get(`receipt/boxClosurePaymentMethodByLocation?addressId=22`,
-                    {
-                        headers: { 'accesstoken': `${accessToken}` },
-                    }
-                );
-                setVilaTotalMostUsedPaymentMethodCheck(response?.data?.totalMostUsedPaymentMethodCheck)
-                setVilaTotalMostUsedPaymentMethodMobileCard(response?.data?.totalMostUsedPaymentMethodMobileCard)
-                setVilaTotalMostUsedPaymentMethodMoney(response?.data?.totalMostUsedPaymentMethodMoney)
-                setVilaTotalMostUsedPaymentMethodPos(response?.data?.totalMostUsedPaymentMethodPos)
-                setError("")
-                setSuccess("")
-            } catch (err) {
-                if (!err?.response) {
-                    setError('Nenhum servidor responde');
-                } else if (err.response?.status === 404 || 400 || 401 || 500) {
-                    setError(err.response?.data?.error);
-                } else {
-                    setError('Falha na pesquisa pelas facturas pendentes, port favor faça refresh');
-                }
-                errorRef?.current?.focus();
-            }
-        }
-        const interfranca = async () => {
-
-            try {
-                const response = await axios.get(`receipt/boxClosurePaymentMethodByLocation?addressId=23`,
-                    {
-                        headers: { 'accesstoken': `${accessToken}` },
-                    }
-                );
-                setInterfrancaTotalMostUsedPaymentMethodCheck(response?.data?.totalMostUsedPaymentMethodCheck)
-                setInterfrancaTotalMostUsedPaymentMethodMobileCard(response?.data?.totalMostUsedPaymentMethodMobileCard)
-                setInterfrancaTotalMostUsedPaymentMethodMoney(response?.data?.totalMostUsedPaymentMethodMoney)
-                setInterfrancaTotalMostUsedPaymentMethodPos(response?.data?.totalMostUsedPaymentMethodPos)
-                setError("")
-                setSuccess("")
-            } catch (err) {
-                if (!err?.response) {
-                    setError('Nenhum servidor responde');
-                } else if (err.response?.status === 404 || 400 || 401 || 500) {
-                    setError(err.response?.data?.error);
-                } else {
-                    setError('Falha na pesquisa pelas facturas pendentes, port favor faça refresh');
-                }
-                errorRef?.current?.focus();
-            }
-        }
         if (!isRequested) {
             report()
-            tirol()
-            vila()
-            interfranca()
         }
 
     }, [accessToken, errorRef, auth, location, isRequested]
@@ -391,169 +302,14 @@ const Clients = () => {
                             </CardBody>
                         </Card>
                     </Col>
-                    <Col className="order-xl-1 text-default " xl="12">
-                        <Card className="bg-secondary mt-1 shadow">
-                        <CardHeader className="text-center border-0 pt-2 pt-md-4   pb-0 pb-md-0">
-                                <h2 className="mb-4 text-default"> Resumo dos Pagamentos feitos</h2>
-                            </CardHeader>
-                            <CardBody>
-                                <Form>
-                                    <div className="" >
-                                        <Row>
-                                            <Col md="12" className="pl-5 pr-5 pt-4">
-                                                <strong>Ecosec: Tirol</strong>
-
-                                                <Table
-                                                    id="table-to-xls"
-                                                    className="align-items-center  "
-                                                    responsive
-                                                    bordered
-                                                    striped
-                                                    hover
-                                                >
-                                                    <thead className=" p-1">
-                                                        <tr>
-
-                                                            <th className="p-1  pl-2  " scope="col"><h4 className="text-default">Tipo</h4></th>
-                                                            <th className="p-1  pl-2" scope="col"> <h4 className="text-default">Valor (MT)</h4></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className=" p-0 text-default">
-
-                                                        <tr key="1" >
-                                                            <td className="p-1  pl-2">{tirolTotalMostUsedPaymentMethodMoney?.name}</td>
-                                                            <td className="p-1  pl-2">{tirolTotalMostUsedPaymentMethodMoney?.totalPayed}</td>
-
-                                                        </tr>
-                                                        <tr key="2" >
-                                                            <td className="p-1  pl-2">{tirolTotalMostUsedPaymentMethodPos?.name}</td>
-                                                            <td className="p-1  pl-2">{tirolTotalMostUsedPaymentMethodPos?.totalPayed}</td>
-                                                        </tr>
-                                                        <tr key="3" >
-                                                            <td className="p-1  pl-2">{tirolTotalMostUsedPaymentMethodMobileCard?.name}</td>
-                                                            <td className="p-1  pl-2">{tirolTotalMostUsedPaymentMethodMobileCard?.totalPayed}</td>
-                                                        </tr>
-                                                        <tr key="4" >
-                                                            <td className="p-1  pl-2">{tirolTotalMostUsedPaymentMethodCheck?.name}</td>
-                                                            <td className="p-1  pl-2">{tirolTotalMostUsedPaymentMethodCheck?.totalPayed}</td>
-                                                        </tr>
-                                                        <tr key="5" >
-                                                            <td className="p-1  pl-2 text-danger font-weight-bold">Total</td>
-                                                            <td className="p-1  pl-2 text-danger font-weight-bold">{tirolTotalMostUsedPaymentMethodCheck?.totalPayed + tirolTotalMostUsedPaymentMethodMoney?.totalPayed + tirolTotalMostUsedPaymentMethodMobileCard?.totalPayed + tirolTotalMostUsedPaymentMethodPos?.totalPayed}</td>
-                                                        </tr>
-
-
-                                                    </tbody>
-
-                                                </Table>
-                                            </Col>
-                                            <Col md="12" className="pl-5 pr-5 mt-4">
-                                                <strong>Ecosec: Vila das Mangas </strong>
-
-                                                <Table
-                                                    id="table-to-xls"
-                                                    className="align-items-center  "
-                                                    responsive
-                                                    bordered
-                                                    striped
-                                                    hover
-                                                >
-                                                    <thead className=" p-1">
-                                                        <tr>
-
-                                                            <th className="p-1  pl-2  " scope="col"><h4 className="text-default">Tipo</h4></th>
-                                                            <th className="p-1  pl-2" scope="col"> <h4 className="text-default">Valor (MT)</h4></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className=" p-0 text-default">
-
-                                                        <tr key="1" >
-                                                            <td className="p-1  pl-2">{vilaTotalMostUsedPaymentMethodMoney?.name}</td>
-                                                            <td className="p-1  pl-2">{vilaTotalMostUsedPaymentMethodMoney?.totalPayed}</td>
-
-                                                        </tr>
-                                                        <tr key="2" >
-                                                            <td className="p-1  pl-2">{vilaTotalMostUsedPaymentMethodPos?.name}</td>
-                                                            <td className="p-1  pl-2">{vilaTotalMostUsedPaymentMethodPos?.totalPayed}</td>
-                                                        </tr>
-                                                        <tr key="3" >
-                                                            <td className="p-1  pl-2">{vilaTotalMostUsedPaymentMethodMobileCard?.name}</td>
-                                                            <td className="p-1  pl-2">{vilaTotalMostUsedPaymentMethodMobileCard?.totalPayed}</td>
-                                                        </tr>
-                                                        <tr key="4" >
-                                                            <td className="p-1  pl-2">{vilaTotalMostUsedPaymentMethodCheck?.name}</td>
-                                                            <td className="p-1  pl-2">{vilaTotalMostUsedPaymentMethodCheck?.totalPayed}</td>
-                                                        </tr>
-
-                                                        <tr key="5" >
-                                                            <td className="p-1  pl-2 text-danger font-weight-bold">Total</td>
-                                                            <td className="p-1  pl-2 text-danger font-weight-bold">{vilaTotalMostUsedPaymentMethodCheck?.totalPayed + vilaTotalMostUsedPaymentMethodMoney?.totalPayed + vilaTotalMostUsedPaymentMethodMobileCard?.totalPayed + vilaTotalMostUsedPaymentMethodPos?.totalPayed}</td>
-                                                        </tr>
-
-                                                    </tbody>
-
-                                                </Table>
-                                            </Col>
-                                            <Col md="12" className="pl-5 pr-5 mt-4">
-                                                <strong>Ecosec: Interfranca</strong>
-
-                                                <Table
-                                                    id="table-to-xls"
-                                                    className="align-items-center  "
-                                                    responsive
-                                                    bordered
-                                                    striped
-                                                    hover
-                                                >
-                                                    <thead className=" p-1">
-                                                        <tr>
-
-                                                            <th className="p-1  pl-2  " scope="col"><h4 className="text-default">Tipo</h4></th>
-                                                            <th className="p-1  pl-2" scope="col"> <h4 className="text-default">Valor (MT)</h4></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className=" p-0 text-default">
-
-                                                        <tr key="1" >
-                                                            <td className="p-1  pl-2"> {interfrancaTotalMostUsedPaymentMethodMoney?.name}</td>
-                                                            <td className="p-1  pl-2"> {interfrancaTotalMostUsedPaymentMethodMoney?.totalPayed}</td>
-
-                                                        </tr>
-                                                        <tr key="2" >
-                                                            <td className="p-1  pl-2"> {interfrancaTotalMostUsedPaymentMethodPos?.name}</td>
-                                                            <td className="p-1  pl-2"> {interfrancaTotalMostUsedPaymentMethodPos?.totalPayed}</td>
-                                                        </tr>
-                                                        <tr key="3" >
-                                                            <td className="p-1  pl-2"> {interfrancaTotalMostUsedPaymentMethodMobileCard?.name}</td>
-                                                            <td className="p-1  pl-2"> {interfrancaTotalMostUsedPaymentMethodMobileCard?.totalPayed}</td>
-                                                        </tr>
-                                                        <tr key="4" >
-                                                            <td className="p-1  pl-2"> {interfrancaTotalMostUsedPaymentMethodCheck?.name}</td>
-                                                            <td className="p-1  pl-2"> {interfrancaTotalMostUsedPaymentMethodCheck?.totalPayed}</td>
-                                                        </tr>
-                                                        <tr key="5" >
-                                                            <td className="p-1  pl-2 text-danger font-weight-bold">Total</td>
-                                                            <td className="p-1  pl-2 text-danger font-weight-bold">{interfrancaTotalMostUsedPaymentMethodCheck?.totalPayed + interfrancaTotalMostUsedPaymentMethodMoney?.totalPayed + interfrancaTotalMostUsedPaymentMethodMobileCard?.totalPayed + interfrancaTotalMostUsedPaymentMethodPos?.totalPayed}</td>
-                                                        </tr>
-
-
-                                                    </tbody>
-
-                                                </Table>
-                                            </Col>
-
-                                        </Row>
-                                    </div>
-
-
-                                </Form>
-                            </CardBody>
-                        </Card>
-                    </Col>
-
 
                 </Row>
-            </Container> : <Redirect from="*" to="/auth/login" />
+
+
+                            
+
+
+            </Container > : <Redirect from="*" to="/auth/login" />
 
         }
         </>

@@ -38,7 +38,7 @@ const Useres = () => {
   const [surname, setSurname] = useState("")
   const [role, setRole] = useState(10000000)
   const [username, setUsername] = useState("")
-  const [pin, setPin] = useState(1234)
+  const [password, setPassword] = useState("Password1")
   const [idNumber, setIdNumber] = useState("")
   const [gender, setGender] = useState(genderConfig.male)
   const [birthday, setBirth] = useState()
@@ -77,12 +77,12 @@ const Useres = () => {
   }, [accessToken]
   )
 
-  const handlePin = async (event, id) => {
+  const handlePassword = async (event, id) => {
     event.preventDefault();
     if (id) {
 
       try {
-        const response = await axios.patch(`auth/resetpindefault/${id}`,
+        const response = await axios.patch(`auth/resetpassworddefault/${id}`,
           {},
           {
             headers: {
@@ -149,12 +149,12 @@ const Useres = () => {
   }
   const handleCreate = async (event) => {
     event.preventDefault()
-    if (name && surname && phoneNumber && role && gender && username && pin) {
+    if (name && surname && phoneNumber && role && gender && username && password) {
 
       try {
         const response = await axios.post(`user/create`,
           JSON.stringify({
-            name, surname, email, role, username, phoneNumber, pin, birthday, gender, idNumber, address
+            name, surname, email, role, username, phoneNumber, password, birthday, gender, idNumber, address
           }),
           {
             headers: {
@@ -255,13 +255,13 @@ const Useres = () => {
 
                   <Col md="4">
                     <FormGroup>
-                      <label className="text-default" htmlFor="pin"><strong className="text-red" >&#10043;</strong>pin</label>
-                      <Input id="pin"
-                        placeholder="1234" type="number"
+                      <label className="text-default" htmlFor="password"><strong className="text-red" >&#10043;</strong>password</label>
+                      <Input id="password"
+                        placeholder="Password*1" type="text"
                         className="text-default text-uppercase"
-                        onChange={(e) =>{ setPin(e.target.value); setError(""); setSuccess("")}}
-                        value={pin}
-                        onInvalid={e => e.target.setCustomValidity("Por favor, preencha o pin do Colaborador")}
+                        onChange={(e) =>{ setPassword(e.target.value); setError(""); setSuccess("")}}
+                        value={password}
+                        onInvalid={e => e.target.setCustomValidity("Por favor, preencha o password do Colaborador")}
                         onInput={e => e.target.setCustomValidity("")}
                       />
                     </FormGroup>
@@ -398,7 +398,7 @@ const Useres = () => {
             <CardHeader className="bg-white border-0">
               <Row className="align-items-center">
                 <Col xs="8">
-                  <h2 className="mb-4 text-default">Lista dos utilizadores da plataforma <strong>Ecosec</strong></h2>
+                  <h2 className="mb-4 text-default">Lista dos utilizadores da plataforma <strong>ECOSEC</strong></h2>
                 </Col>
                 <FormGroup>
                   <Button className="btn btn-info " size="lg" to="/admin/editusers" type="button" tag={Link} ><i className="ni ni-send"></i> Editar Useres</Button>
@@ -437,9 +437,9 @@ const Useres = () => {
                               placement="left"
                               target="tooltip611234743"
                             >
-                              Redefinir o pin do utilizador para 1234
+                              Redefinir o password do utilizador para Password1
                             </UncontrolledTooltip>
-                            <Button value className="btn btn-white p-1" type="button" onClick={(e) => handlePin(e, user.id)} id="tooltip611234743" ><i className="fas fa-edit"></i>Red. Senha</Button>
+                            <Button value className="btn btn-white p-1" type="button" onClick={(e) => handlePassword(e, user.id)} id="tooltip611234743" ><i className="fas fa-edit"></i>Red. Senha</Button>
                             <Button value className="btn btn-white p-1" type="button" onClick={(e) => handleStatus(e, user.id)} ><i className="fas fa-edit"></i>{user?.active ? "Desactivar" : "activar"}</Button>
                           </td>
                         </tr>

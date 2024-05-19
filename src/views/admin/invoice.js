@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Redirect, Link } from "react-router-dom";
+import html2pdf from "html2pdf.js";
 
 
 // reactstrap components
@@ -158,6 +159,22 @@ const Invoices = () => {
 
   }
 
+  const options = {
+    filename: orderRef,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' },
+  };
+
+  const convertToPdf = () => {
+    if (clientId !== 1 && orders.length >0 ) {
+      const content = printRef.current;
+      html2pdf().set(options).from(content).save();
+    } else {
+      setError("Selecione a factura para gerar a seunda via")
+    }
+
+  };
 
   return (
 
@@ -206,6 +223,7 @@ const Invoices = () => {
                   <Col className="mt-4 pt-2 pb-2 " >
 
                     <Button onClick={handlePrinter} block disabled={total ? false : true}>Imprimir Factura</Button>
+                    <Button onClick={convertToPdf} block disabled={total ? false : true}>Download da Factura</Button>
                   </Col>
 
                 </Row>
@@ -225,8 +243,8 @@ const Invoices = () => {
                       <thead className="text-white p-1 h1">
                         <tr>
                           <th className="p-1" scope="col">N. Factura</th>
-                          <th className="p-1" scope="col">N. Recibo</th>
                           <th className="p-1" scope="col">V. Total</th>
+                          <th className="p-1" scope="col">P. Desconto</th>
                           <th className="p-1" scope="col">V. Pago</th>
                           <th className="p-1" scope="col">Data</th>
                           <th className="p-1" scope="col">C. Cliente</th>
@@ -240,8 +258,8 @@ const Invoices = () => {
                         {invoices?.map((invoice, index) => (
                           <tr key={index} value={invoice} >
                             <td className="pl-1 p-0">{invoice?.orderRef}</td>
-                            <td className="pl-1 p-0">{invoice?.receiptRef}</td>
                             <td className="pl-1 p-0">{invoice?.totalToPay}</td>
+                          <td className="pl-1 p-0">{invoice?.discount}</td>
                             <td className="pl-1 p-0">{invoice?.payedMoney}</td>
                             <td className="pl-1 p-0">{invoice?.createdAt ? new Date(invoice?.createdAt).toISOString(0, 10).substring(0, 10) : ""}</td>
                             <td className="pl-1 p-0">{invoice?.clientId}</td>
@@ -264,10 +282,10 @@ const Invoices = () => {
           <div ref={printRef}>
             <style type="text/css" media="print">{"@page {size: portrait;}"}</style>
             <Card className={isPrint ? "" : "mt-7"}>
-              
+
               <CardHeader className=" border-0 text-center text-uppercase">
 
-                <h3 className="text-darker  p-0 font-weight-bolder m-0" >ECOSEC Lavandaria</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >LAVANDARIA ECOSEC</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Nuit: {location.nuit}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location.name}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Tel: {location?.phoneNumber1 ? location.phoneNumber1 : ""}  {location?.phoneNumber2 ? location.phoneNumber2 : ""}  {location?.phoneNumber3 ? location.phoneNumber3 : ""} </h3>
@@ -305,35 +323,35 @@ const Invoices = () => {
                           </ul>
                         ))}
                       </Col> :
-                    <Table
-                      className="align-items-center "
-                      responsive
-                      bordered
-                    >
-                      <thead className=" text-darker h1">
-                        <tr >
-                          <th scope="col" className="p-1 font-weight-bolder">Qt</th>
-                          <th scope="col" className="p-1 font-weight-bolder">Descrição</th>
-                          <th scope="col" className="p-1 font-weight-bolder">P.Unidade</th>
-                          <th scope="col" className="p-1 font-weight-bolder">Subtotal</th>
-                          <th scope="col" className="p-1 font-weight-bolder" >comentario</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-darker p-0 text-uppercase">
-                        {orders?.map((order, index) => (
-                          <tr key={index} value={order}>
-                            <td className="p-1 font-weight-bolder">{order?.quantity}</td>
-                            <td className="p-1 font-weight-bolder">{order?.family}</td>
-                            <td className="p-1 font-weight-bolder">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                            <td className="p-1 font-weight-bolder">{(parseFloat(parseFloat(order?.prince) * 0.16 + parseFloat(order?.prince)) * order?.quantity).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                            <td className="p-1 font-weight-bolder">{order?.observation}</td>
+                        <Table
+                          className="align-items-center "
+                          responsive
+                          bordered
+                        >
+                          <thead className=" text-darker h1">
+                            <tr >
+                              <th scope="col" className="p-1 font-weight-bolder">Qt</th>
+                              <th scope="col" className="p-1 font-weight-bolder">Descrição</th>
+                              <th scope="col" className="p-1 font-weight-bolder">P.Unidade</th>
+                              <th scope="col" className="p-1 font-weight-bolder">Subtotal</th>
+                              <th scope="col" className="p-1 font-weight-bolder" >comentario</th>
+                            </tr>
+                          </thead>
+                          <tbody className="text-darker p-0 text-uppercase">
+                            {orders?.map((order, index) => (
+                              <tr key={index} value={order}>
+                                <td className="p-1 font-weight-bolder">{order?.quantity}</td>
+                                <td className="p-1 font-weight-bolder">{order?.family}</td>
+                                <td className="p-1 font-weight-bolder">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                <td className="p-1 font-weight-bolder">{(parseFloat(parseFloat(order?.prince) * 0.16 + parseFloat(order?.prince)) * order?.quantity).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                <td className="p-1 font-weight-bolder">{order?.observation}</td>
 
-                          </tr>
-                        ))}
+                              </tr>
+                            ))}
 
-                      </tbody>
-                    </Table>
-}
+                          </tbody>
+                        </Table>
+                    }
                   </Col>
 
 

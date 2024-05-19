@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import html2pdf from "html2pdf.js";
 
 
 // reactstrap components
@@ -51,6 +52,7 @@ const Order = function () {
   const [quotationRef, setQuotationRef] = useState("")
   const [count, setCount] = useState(0)
   const [urgente, setUrgent] = useState("")
+  const [dontPrint, setDontPrint] = useState(false)
 
 
   const removeOrder = (order) => {
@@ -127,7 +129,7 @@ const Order = function () {
       if (index !== "1000000") {
 
         setFamily(article?.name ? article?.name : "")
-        setUrgent(article.name)
+        setUrgent(article?.name)
         setPrince(article?.prince ? article?.prince : "")
       }
     }
@@ -205,8 +207,8 @@ const Order = function () {
   )
 
   const handleCreate = async (event) => {
-    setIsPrint(true)
-    event.preventDefault()
+    event ? setIsPrint(true) : setDontPrint(true);
+    event?.preventDefault()
     if (clientId && orders) {
       try {
         const response = await axios.post(`quotation/create`,
@@ -221,12 +223,13 @@ const Order = function () {
             },
           }
         );
-        handlePrinter()
+        event ? handlePrinter() : setDontPrint(false)
         setError("")
         setSuccess(response?.data?.message)
         successRef?.current?.focus();
         setIsPrint(false)
         setCount(count + 1)
+        handleReset()
       } catch (err) {
         setIsPrint(false)
         setSuccess("")
@@ -320,6 +323,27 @@ const Order = function () {
 
   }
 
+
+  const options = {
+    filename: quotationRef,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' },
+  };
+
+
+  const convertToPdf = () => {
+
+    if (clientId !== 1 && orders.length > 0) {
+      const content = printRef.current;
+      setDontPrint(true)
+      handleCreate()
+      html2pdf().set(options).from(content).save();
+    } else {
+      setError("Selecione o cliente e pelos um item da requisicao")
+    }
+   
+  };
   return (
 
     <>{accessToken ? (<Container fluid>
@@ -438,7 +462,7 @@ const Order = function () {
                         type="number"
                         min={1}
                         value={prince}
-                        disabled={ urgente==="urgencia" ? false : true}
+                        disabled={urgente === "urgencia" ? false : true}
                         className="text-uppercase text-default"
                         onChange={(e) => setPrince(e.target.value)}
                       />
@@ -481,8 +505,8 @@ const Order = function () {
                   <Button onClick={(e) => {
                     setIsPrint(true);
                     handleCreate(e);
-                  }} block className="btn-success" >Gerar a Cotação</Button>
-
+                  }} block className="btn-success" >Imprimir Cotação</Button>
+                  <Button onClick={convertToPdf} className="btn-success" block>Download da Cotacao</Button>
                 </Row>
 
               </Form>
@@ -497,7 +521,7 @@ const Order = function () {
             <Card className={isPrint ? "" : " mt-7 "} >
               <CardHeader className=" border-0 text-center  ">
 
-                <h3 className="text-darker  p-0 font-weight-bolder m-0" >ECOSEC Lavandaria</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >LAVANDARIA ECOSEC</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >Nuit: {location?.nuit}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location?.name}</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >{location?.location}</h3>
@@ -548,7 +572,7 @@ const Order = function () {
                             <th scope="col" className="p-1 ">P.Unidade</th>
                             <th scope="col" className="p-1 ">Subtotal</th>
                             <th scope="col" className="p-1 ">Comentario</th>
-                            <th scope="col" className="p-1 ">Acção</th>
+                            {dontPrint? "" : <th scope="col" className="p-1 ">Acção</th>}
                           </tr>
                         </thead>
                         <tbody className="text-darker p-0">
@@ -559,14 +583,14 @@ const Order = function () {
                               <td className=" p-1 ">{parseFloat(order?.prince).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
                               <td className=" p-1 ">{parseFloat(order?.subTotal).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</td>
                               <td className=" p-1 ">{order?.observation}</td>
-                              <td className=" p-1 "><button value={order} className="btn btn-warning p-1" onClick={(e) => {
+                              {dontPrint ? "": <td className=" p-1 "><button value={order} className="btn btn-warning p-1" onClick={(e) => {
                                 e.preventDefault();
                                 removeOrder(order)
-                              }} ><i className="ni ni-fat-delete"></i> Remover</button></td>
+                              }} ><i className="ni ni-fat-delete"></i> Remover</button></td>}
                             </tr>
                           ))}
                         </tbody></Table>
-}
+                  }
                   </Col>
 
 
