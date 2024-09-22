@@ -59,8 +59,6 @@ const Order = function () {
   const [isPrint, setIsPrint] = useState(false)
   const [urgent, setUrgent] = useState("")
   const [dontPrint, setDontPrint] = useState(false)
-  const [discount, setDiscount] = useState(0)
-  const [totalDiscount, setTotalDiscount] = useState(0)
   const [deliveryGuide, setDeliveryGuide] = useState("")
   const [isPerKilo, setIsPerKilo] = useState(false)
 
@@ -133,9 +131,7 @@ const Order = function () {
     handleSelectArticle()
   }, [index, articles])
 
-  useEffect(() => {
-    setTotalDiscount(total - total * discount / 100)
-  }, [discount, total])
+  
   useEffect(() => {
     const handleSelectClient = () => {
       const client = clients.find(client => {
@@ -238,7 +234,7 @@ const Order = function () {
       try {
         const response = await axios.post(`order/create`,
           JSON.stringify({
-            client, order: orders, paymentStatus, observation, location: location.id, orderRef, paymentMissing, payedMoney, totalToPay: totalDiscount, discount, deliveryGuide
+            client, order: orders, paymentStatus, observation, location: location.id, orderRef, paymentMissing, payedMoney, totalToPay:total,  deliveryGuide
 
           }),
           {
@@ -361,7 +357,7 @@ const Order = function () {
                 <Button className="m0 text-uppercase" color="danger" to="/operator/clients" type="button" tag={Link}  >
                   <i className="fas fa-arrow-left"></i>voltar</Button></Col></Row>
             <CardHeader className="text-center border-0 pt-2 pt-md-4 pb-0 pb-md-0">
-              <h3 className="mb-0 text-default">Facturação o</h3>
+              <h3 className="mb-0 text-default">Facturação</h3>
             </CardHeader>
             <CardBody>
               <Form className="pl-4 font-weight-bold text-uppercase" id="orders">
@@ -393,21 +389,7 @@ const Order = function () {
 
                     </FormGroup>
                   </Col>
-                  <Col md="4" >
-                    <FormGroup className="mb-4">
-
-                      <label className="text-default form-control-label" htmlFor="discount">Inserir a Percentagem desconto </label>
-                      <Input id="discount"
-                        placeholder="0"
-                        type="number"
-                        disabled={name ? false : true}
-                        className="text-default"
-                        value={discount}
-                        onChange={(e) => setDiscount(e.target.value)}
-                        min={0}
-                      />
-                    </FormGroup>
-                  </Col>
+                
                   <Col md="4" >
                     <FormGroup className="mb-4">
 
@@ -648,8 +630,8 @@ const Order = function () {
                 </Row>
 
                 <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Total sem desconto a pagar: {parseFloat(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3>
-                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Desconto {parseFloat(discount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</h3>
-                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Total com desconto a pagar: {parseFloat(totalDiscount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3>
+                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Desconto {0} %</h3>
+                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Total com desconto a pagar: {parseFloat(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MT</h3>
                 <h3 className="text-darker  p-0 font-weight-bolder m-0" >IVA: 16 %</h3>
                 <hr style={{
                   width: "98%",

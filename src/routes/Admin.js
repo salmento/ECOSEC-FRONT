@@ -22,6 +22,7 @@ import Quotation from "views/admin/quotation";
 import QuotationView from "views/admin/viewQuotation";
 import Top10Clients from "views/admin/top10Clients";
 import BankStatement from "views/admin/bankStatement";
+import orderHistory from "views/admin/orderHistory";
 
 var routes = [
   {
@@ -118,6 +119,14 @@ var routes = [
     name: "Editar",
     icon: "fas fa-male text-white",
     component: editcompany,
+    layout: "/admin",
+    invisible: true,
+  },
+  {
+    path: "/orderhistory",
+    name: "Historico de pagamento",
+    icon: "ni ni-books text-white",
+    component: orderHistory,
     layout: "/admin",
     invisible: true,
   },
