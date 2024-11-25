@@ -58,6 +58,8 @@ const Invoices = () => {
   const [isPrint, setIsPrint] = useState(false)
   const [discount, setDiscount] = useState(0)
   const [count, setCount] = useState(0)
+  const [paymentInstance, setPaymentInstance] = useState(0)
+  const [paymentCompany, setPaymentCompany] = useState("")
 
   useEffect(() => {
     setPaymentMissing(total >= payedMoney ? parseFloat(parseFloat(total) - parseFloat(payedMoney)).toFixed(2) : parseFloat(0).toFixed(2))
@@ -67,10 +69,11 @@ const Invoices = () => {
     setPayChange(payedMoney >= total ? parseFloat(parseFloat(payedMoney) - parseFloat(total)).toFixed(2) : parseFloat(payChange).toFixed(2))
   }, [payedMoney, total, paymentMissing, payChange])
 
-  const HandleMoneyPayment = (ismoney, isOther, paymentmethod) => {
+  const HandleMoneyPayment = (ismoney, isOther, paymentmethod, paymentInstance) => {
     setIsMoney(ismoney)
     setIsPayment(isOther)
     setPaymentMethod(paymentmethod)
+    setPaymentInstance(paymentInstance)
   }
 
 
@@ -164,7 +167,7 @@ const Invoices = () => {
       try {
         const response = await axios.post(`receipt/payment/`,
           JSON.stringify({
-            paymentMethod, paymentStatus, paymentReference, paymentMissing, payedMoney, orderRef, receiptRef, orders, clientId, location: location.id, totalToPay: total, observation
+            paymentMethod, paymentStatus, paymentReference, paymentMissing, payedMoney, orderRef, receiptRef, orders, clientId, location: location.id, totalToPay: total, observation, paymentCompany
 
           }),
           {
@@ -318,22 +321,22 @@ const Invoices = () => {
                 <Row>
                   <Col>
                     <FormGroup>
-                      <Button className="btn btn-danger m-0" disabled={paymentStatus === "pago" ? true : false} type="button" onClick={(e) => HandleMoneyPayment(false, true, paymentMethodConfig.mobileCard)}><i className="fas fa-hand-holding-usd"></i>Carteira Móvel</Button>
+                      <Button className="btn btn-danger m-0" disabled={paymentStatus === "pago" ? true : false} type="button" onClick={(e) => HandleMoneyPayment(false, true, paymentMethodConfig.mobileCard, 0)}><i className="fas fa-hand-holding-usd"></i>Carteira Móvel</Button>
                     </FormGroup>
                   </Col>
                   <Col >
                     <FormGroup>
-                      <Button className="btn btn-danger m-0" disabled={paymentStatus === "pago" ? true : false} type="button" onClick={(e) => HandleMoneyPayment(false, true, paymentMethodConfig.pos)}><i className="ni ni-credit-card"></i>POS</Button>
+                      <Button className="btn btn-danger m-0" disabled={paymentStatus === "pago" ? true : false} type="button" onClick={(e) => HandleMoneyPayment(false, true, paymentMethodConfig.pos, 1)}><i className="ni ni-credit-card"></i>POS</Button>
                     </FormGroup>
                   </Col>
                   <Col >
                     <FormGroup>
-                      <Button className="btn btn-danger m-0" disabled={paymentStatus === "pago" ? true : false} type="button" onClick={(e) => HandleMoneyPayment(false, true, paymentMethodConfig.check)}><i className="fas fa-money-check-alt"></i>Cheque</Button>
+                      <Button className="btn btn-danger m-0" disabled={paymentStatus === "pago" ? true : false} type="button" onClick={(e) => HandleMoneyPayment(false, true, paymentMethodConfig.check, 2)}><i className="fas fa-money-check-alt"></i>Cheque</Button>
                     </FormGroup>
                   </Col>
                   <Col >
                     <FormGroup>
-                      <Button className="btn btn-danger m-0" disabled={paymentStatus === "pago" ? true : false} type="button" onClick={(e) => HandleMoneyPayment(true, false, paymentMethodConfig.money)}><i className="fas fa-money-bill-wave"></i>Dinheiro</Button>
+                      <Button className="btn btn-danger m-0" disabled={paymentStatus === "pago" ? true : false} type="button" onClick={(e) => HandleMoneyPayment(true, false, paymentMethodConfig.money, 2)}><i className="fas fa-money-bill-wave"></i>Dinheiro</Button>
                     </FormGroup>
                   </Col>
                 </Row>
@@ -384,6 +387,85 @@ const Invoices = () => {
                       />
                     </FormGroup>
                   </Col>
+
+                  {paymentInstance===0 ? <Col md="5" >
+                    <FormGroup className="mb-4">
+
+                    <label className="text-default form-control-label " htmlFor="paymentInstance"> Carteira Movel:
+                          <select id="paymentInstance"
+                            className="text-default border-0 form-control border-dark font-weight-bold text-uppercase select mt-2"
+                            defaultValue={0}
+                            onChange={(e) => setPaymentCompany(e.target.value)}
+                            required>
+                            <option key={0} value={0} disabled>  Selectione a carteira movel </option>
+                              <option key={1} value="MPESA">  MPESA </option>
+                              <option key={2} value="MCEL">  MCEL </option>
+                              <option key={3} value="EMOLA">  EMOLA </option>
+                          </select>
+                        </label>
+                    </FormGroup>
+                  </Col> :  paymentInstance === 1 ? <Col md="5" >
+                    <FormGroup className="mb-4">
+
+                    <label className="text-default form-control-label " htmlFor="paymentInstance"> Banco:
+                          <select id="paymentInstance"
+                            className="text-default border-0 form-control border-dark font-weight-bold text-uppercase select mt-2"
+                            defaultValue={0}
+                            onChange={(e) => setPaymentCompany(e.target.value)}
+                            required>
+                            <option key={0} value={0} disabled>  Selectione o bome do banco </option>
+                              <option key={1} value="Absa Bank Mozambique">  Absa Bank Mozambique  </option>
+                              <option key={2} value="Access Bank Mozambique S.A.">  Access Bank Mozambique S.A.  </option>
+                              <option key={3} value="Banco Comercial e de Investimentos ">  Banco Comercial e de Investimentos  </option>
+                              <option key={4} value="Banco de Investimentos Global ">  Banco de Investimentos Global  </option><option key={5} value="Banco Mercantil e de Investimentos ">  Banco Mercantil e de Investimentoss  </option><option key={6} value="Moza Banco ">  Moza Banco  </option>
+                              <option key={7} value="Banco Nacional de Investimentos ">  Banco Nacional de Investimentos  </option>
+                              <option key={8} value="Banco Société Générale Moçambique "> Banco Société Générale Moçambique </option>
+                              <option key={9} value="Ecobank Mozambique ">  Ecobank Mozambique   </option>
+                              <option key={10} value="First National Bank Mozambique"> First National Bank Mozambique  </option>
+                              <option key={11} value="First Capital Bank Mozambique ">  BFirst Capital Bank Mozambique  </option>
+                              <option key={12} value="Letshego Bank Mozambique">  Letshego Bank Mozambique  </option>
+                              <option key={13} value="Banco Millennium BIM ">  Banco Millennium BIM  </option>
+                              <option key={14} value="Nedbank Mozambique ">  Nedbank Mozambique  </option>
+                              <option key={15} value="Opportunity Bank Mozambique ">  Opportunity Bank Mozambique  </option>
+                              <option key={16} value="Socremo Microfinance Bank ">  Socremo Microfinance Bank </option>
+                              <option key={13} value="Standard Bank Mozambique "> Standard Bank Mozambique  </option>
+                              <option key={13} value="UBA Bank Mozambique "> UBA Bank Mozambique  </option>
+                              <option key={13} value="Banco Vista Moçambique "> Banco Vista Moçambique </option>
+                          </select>
+                        </label>
+                    </FormGroup>
+                  </Col> : paymentInstance===2 ? <Col md="5" >
+                    <FormGroup className="mb-4">
+
+                    <label className="text-default form-control-label " htmlFor="paymentInstance"> Banco:
+                          <select id="paymentInstance"
+                            className="text-default border-0 form-control border-dark font-weight-bold text-uppercase select mt-2"
+                            defaultValue={0}
+                            onChange={(e) => setPaymentCompany(e.target.value)}
+                            required>
+                            <option key={0} value={0} disabled>  Selectione o bome do banco </option>
+                              <option key={1} value="Absa Bank Mozambique">  Absa Bank Mozambique  </option>
+                              <option key={2} value="Access Bank Mozambique S.A.">  Access Bank Mozambique S.A.  </option>
+                              <option key={3} value="Banco Comercial e de Investimentos ">  Banco Comercial e de Investimentos  </option>
+                              <option key={4} value="Banco de Investimentos Global ">  Banco de Investimentos Global  </option><option key={5} value="Banco Mercantil e de Investimentos ">  Banco Mercantil e de Investimentoss  </option><option key={6} value="Moza Banco ">  Moza Banco  </option>
+                              <option key={7} value="Banco Nacional de Investimentos ">  Banco Nacional de Investimentos  </option>
+                              <option key={8} value="Banco Société Générale Moçambique "> Banco Société Générale Moçambique </option>
+                              <option key={9} value="Ecobank Mozambique ">  Ecobank Mozambique   </option>
+                              <option key={10} value="First National Bank Mozambique"> First National Bank Mozambique  </option>
+                              <option key={11} value="First Capital Bank Mozambique ">  First Capital Bank Mozambique  </option>
+                              <option key={12} value="Letshego Bank Mozambique">  Letshego Bank Mozambique  </option>
+                              <option key={13} value="Banco Millennium BIM ">  Banco Millennium BIM  </option>
+                              <option key={14} value="Nedbank Mozambique ">  Nedbank Mozambique  </option>
+                              <option key={15} value="Opportunity Bank Mozambique ">  Opportunity Bank Mozambique  </option>
+                              <option key={16} value="Socremo Microfinance Bank ">  Socremo Microfinance Bank </option>
+                              <option key={13} value="Standard Bank Mozambique "> Standard Bank Mozambique  </option>
+                              <option key={13} value="UBA Bank Mozambique "> UBA Bank Mozambique  </option>
+                              <option key={13} value="Banco Vista Moçambique "> Banco Vista Moçambique </option>
+                          </select>
+                        </label>
+                    </FormGroup>
+                  </Col> :  ""
+                  }
                   <Col md="12" >
                     <FormGroup>
                       <Button block onClick={(e)=>handlePayment(e)} className="btn-success "  >Imprimir o Recibo </Button>
@@ -524,11 +606,11 @@ const Invoices = () => {
 
                 </Row>
 
-                <h3 className="text-darker  p-0 font-weight-bolder m-0" >Total a pagar: {total}.00MT</h3>
-                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Valor pago: {payedMoney}.00MT</h3>
-                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Valor por pagar: {paymentMissing} MT</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >Total a pagar: {total.toLocaleString()}.00MT</h3>
+                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Valor pago: {payedMoney.toLocaleString()}.00MT</h3>
+                <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Valor por pagar: {paymentMissing.toLocaleString()} MT</h3>
                 <h3 className=" text-darker  p-0 font-weight-bolder m-0" >Percentagem do desconto: {discount} %</h3>
-                <h3 className="text-darker  p-0 font-weight-bolder m-0" >Troncos: {payChange} MT</h3>
+                <h3 className="text-darker  p-0 font-weight-bolder m-0" >Troncos: {payChange.toLocaleString()} MT</h3>
                 <hr style={{
                   width: "98%",
                   marginLeft: 0,

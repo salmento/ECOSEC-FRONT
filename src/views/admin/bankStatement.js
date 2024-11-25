@@ -240,13 +240,13 @@ const Invoices = () => {
                         {invoices?.map((invoice, index) => (
                           <tr key={index} value={invoice} >
                             <td className="pl-1 p-0">{invoice?.orderRef}</td>
-                            <td className="pl-1 p-0">{invoice?.totalToPay}</td>
-                            <td className="pl-1 p-0">{invoice?.payedMoney}</td>
-                            <td className="pl-1 p-0">{invoice?.paymentMissing
+                            <td className="pl-1 p-0">{invoice?.totalToPay.toLocaleString()}</td>
+                            <td className="pl-1 p-0">{invoice?.payedMoney.toLocaleString()}</td>
+                            <td className="pl-1 p-0">{invoice?.paymentMissing.toLocaleString()
                             }</td>
                             <td className="pl-1 p-0">{invoice?.paymentStatus}</td>
                             <td className="pl-1 p-0">{invoice?.entryDate ? new Date(invoice?.entryDate).toISOString(0, 10).substring(0, 10) : ""}</td>
-                            <td className={invoice?.paymentMissing===0 ? "pl-1 p-0 text-success" : invoice?.paymentMissing<=1000 ?   "pl-1 p-0 text-warning" :  "pl-1 p-0 text-danger"} >{invoice?.paymentMissing }</td>
+                            <td className={invoice?.paymentMissing===0 ? "pl-1 p-0 text-success" : invoice?.paymentMissing<=1000 ?   "pl-1 p-0 text-warning" :  "pl-1 p-0 text-danger"} >{invoice?.paymentMissing.toLocaleString() }</td>
                             <td className="pl-1 p-0">{invoice?.clientId}</td>
                             <td className="pl-1 p-0">{invoice?.clientName} {invoice?.clientSurname}</td>
                             <td className="pl-1 p-0">{invoice?.vendorName} {invoice?.vendorSurname}</td>
@@ -268,13 +268,13 @@ const Invoices = () => {
                 </Row>
                 <Row >
                 <Col md="4">
-                    Total Facturado: {total}
+                    Total Facturado: {total.toLocaleString()}
                   </Col>
                   <Col md="4">
-                    Total Recebido: {totalPayed}
+                    Total Recebido: {totalPayed.toLocaleString()}
                   </Col>
                   <Col md="4">
-                     Total Por Pagar: {remainToReceive}
+                     Total Por Pagar: {remainToReceive.toLocaleString()}
                   </Col>  
                 </Row>
               </Form>

@@ -29,7 +29,7 @@ const Invoices = () => {
   const [invoices, setInvoices] = useState([])
   const [remainToReceive, setRemainToReceive] = useState(0)
   const [totalPayed, setTotalPayed] = useState(0)
-
+  const [totalToPay, setTotalToPay] = useState()
 
   useEffect(() => {
    
@@ -94,6 +94,7 @@ const Invoices = () => {
       })
       setTotalPayed(totalPayed)
       setRemainToReceive( totalToPay)
+      setTotalToPay(invoices[0].totalToPay)
       
     }
 
@@ -142,6 +143,7 @@ const Invoices = () => {
                           <th className="p-1" scope="col">Valor Por Pagar</th>
                           <th className="p-1" scope="col">Estado do pagamento</th>
                           <th className="p-1" scope="col">Metodo de Pagamento</th>
+                          <th className="p-1" scope="col">Carteria Movel/Banco</th>
                           <th className="p-1" scope="col">Data de Pagamento</th>
                           <th className="p-1" scope="col">Balanco</th>
                           <th th className="p-1" scope="col">Codigo do Cliente</th>
@@ -153,15 +155,16 @@ const Invoices = () => {
                         {invoices?.map((invoice, index) => (
                           <tr key={index} value={invoice} >
                             <td className="pl-1 p-0">{invoice?.orderRef}</td>
-                            <td className="pl-1 p-0">{invoice?.totalToPay}</td>
+                            <td className="pl-1 p-0">{invoice?.totalToPay.toLocaleString()}</td>
                             <td className="pl-1 p-0">{invoice?.receiptRef}</td>
-                            <td className="pl-1 p-0">{invoice?.payedMoney}</td>
-                            <td className="pl-1 p-0">{invoice?.paymentMissing
+                            <td className="pl-1 p-0">{invoice?.payedMoney.toLocaleString()}</td>
+                            <td className="pl-1 p-0">{invoice?.paymentMissing.toLocaleString()
                             }</td>
                             <td className="pl-1 p-0">{invoice?.paymentStatus}</td>
                             <td className="pl-1 p-0">{invoice?.paymentMethod}</td>
+                            <td className="pl-1 p-0">{invoice?.paymentCompany}</td>
                             <td className="pl-1 p-0">{invoice?.createdAt ? new Date(invoice?.createdAt).toISOString(0, 10).substring(0, 10) : ""}</td>
-                            <td className={invoice?.paymentMissing===0 ? "pl-1 p-0 text-success" : invoice?.paymentMissing<=1000 ?   "pl-1 p-0 text-warning" :  "pl-1 p-0 text-danger"} >{invoice?.paymentMissing }</td>
+                            <td className={invoice?.paymentMissing===0 ? "pl-1 p-0 text-success" : invoice?.paymentMissing<=1000 ?   "pl-1 p-0 text-warning" :  "pl-1 p-0 text-danger"} >{invoice?.paymentMissing.toLocaleString() }</td>
                             <td className="pl-1 p-0">{invoice?.clientId}</td>
                             <td className="pl-1 p-0">{invoice?.clientName} {invoice?.clientSurname}</td>
                             <td className="pl-1 p-0">{invoice?.vendorName} {invoice?.vendorSurname}</td>
@@ -173,7 +176,17 @@ const Invoices = () => {
                     </Table>
                   </Col>
                 </Row>
-               
+                <Row >
+                <Col md="4">
+                    Total Facturado: {totalToPay?.toLocaleString()}
+                  </Col>
+                  <Col md="4">
+                    Total Recebido: {totalPayed?.toLocaleString()}
+                  </Col>
+                  <Col md="4">
+                     Total Por Pagar: {remainToReceive?.toLocaleString()}
+                  </Col>  
+                </Row>
               </Form>
             </CardBody>
           </Card>
